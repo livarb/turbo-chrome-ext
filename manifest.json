@@ -1,0 +1,55 @@
+{
+  "manifest_version": 2,
+
+  "name": "Turbo-tillegg for data.norge",
+  "description": "Ekstra funksjonalitet for nettstadane data.norge.no, hotell.difi.no og fellesdatakatalog.brreg.no. Uoffisiell Chrome-utviding.",
+  "version": "0.5",
+
+  "icons": {
+    "128": "app-icon_128x128.png"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["*://fellesdatakatalog.brreg.no/datasets/*"],
+      "js": ["jquery-3.1.1.min.js", "felles.js", "fdk_data.js"]
+    },    
+    {
+      "matches": ["*://data.norge.no/"],
+      "js": ["jquery-3.1.1.min.js", "felles.js", "datanorge_front.js"]
+    },
+    {
+      "matches": ["*://data.norge.no/data/*"],
+      "js": ["jquery-3.1.1.min.js", "felles.js", "datanorge_data.js"]
+    },
+    {
+      "matches": ["*://data.norge.no/organisasjoner/*", "*://data.norge.no/organization/*"],
+      "exclude_matches": ["*://data.norge.no/organisasjoner"],
+      "js": ["jquery-3.1.1.min.js", "felles.js", "datanorge_org.js"]
+    },    
+    {
+      "matches": ["*://data.norge.no/organisasjoner"],
+      "js": ["jquery-3.1.1.min.js", "felles.js", "datanorge_orgs.js"]
+    },     
+    {
+      "matches": ["*://data.norge.no/app/*"],
+      "js": ["jquery-3.1.1.min.js", "felles.js", "datanorge_app.js"]
+    },    
+    {
+      "matches": ["*://data.norge.no/node/*"],
+      "js": ["jquery-3.1.1.min.js", "datanorge_node.js"]
+    },    
+    {
+      "matches": ["https://hotell.difi.no/?dataset=*"],
+      "js": ["jquery-3.1.1.min.js", "felles.js", "datahotell.js"]      
+    },
+    {
+      "matches": ["https://hotell.difi.no/"],
+      "js": ["jquery-3.1.1.min.js", "felles.js", "datahotellFrontpage.js"]      
+    }
+  ],  
+  "permissions": [
+    "activeTab",
+    "https://ajax.googleapis.com/"
+  ]
+}
