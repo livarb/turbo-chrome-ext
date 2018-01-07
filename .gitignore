@@ -1,5 +1,6 @@
 .DS_Store
 old/
 packages/
+other/
 jquery-3.1.1.min.js
 *.psd

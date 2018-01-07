@@ -39,6 +39,16 @@ function showListOfDatasets() {
 		html = '<strong>Datasett (' + data.length + ')</strong><br/><br/>'
 			+ '<table style="text-align: left;"><tr><th>Namn</th><th>Lokasjon</th></tr>';
 
+		// https://stackoverflow.com/a/8837511
+		data.sort(function(a, b){
+		    var keyA = b.location,
+		        keyB = a.location;
+		    // Compare the 2 dates
+		    if(keyA < keyB) return 1;
+		    if(keyA > keyB) return -1;
+		    return 0;
+		});
+
 		for (var i = 0; i < data.length; i++) {
 			html += '<tr><td>' + data[i].name + '</td>'
 				+ '<td><a href="https://hotell.difi.no/?dataset=' 

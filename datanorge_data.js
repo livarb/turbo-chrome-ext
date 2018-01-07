@@ -58,19 +58,6 @@ function getNodeId() {
 	return $("link[rel='shortlink']").attr('href').split("/")[2];
 }
 
-function addLastModified(datanorgedatasets) { // for when data.norge-entry was last modified
-	var nodeId = getNodeId();
-	var dataset = getDataset(nodeId, datanorgedatasets);
-
-	if (dataset) {
-		$("#datanorge-entry-issued").append(dataset.issued);
-		$("#datanorge-entry-modified").append(dataset.modified.replace("T", " "));
-	} else {
-		$("#publisertLi").show();
-		$("#aboutEntryList").hide();
-	}
-}
-
 function prepareLastModified() { // for when data.norge-entry was last modified
 
 	// $("#block-datanorge-data-description-widget div[class='content'] ul li:nth-child(2)").remove();
@@ -84,8 +71,38 @@ function prepareLastModified() { // for when data.norge-entry was last modified
 	var htmlToInsert = '<ul id="aboutEntryList"><h2>Data.norge-oppføring</h2>'
 	+ '<li id="datanorge-entry-issued"><strong>Publisert: &nbsp;&nbsp;</strong></li>'	
 	+ '<li id="datanorge-entry-modified"><strong>Oppdatert: </strong></li>'
+	+ '<li id="datanorge-entry-numDatasets"><strong title="Brukes til ' 
+		+ 'statistikkformål og ajourføres av Difi. Bakgrunnen er at ei '
+		+ 'data-oppføring på data.norge.no kan representere fleire individuelle '
+		+ ' datasett. Dersom du meiner verdien er feil, send gjerne e-post til '
+		+ 'opnedata@difi.no">'
+		+ 'Antall individuelle datasett: </strong></li>'	
 	+ '</ul>';
 	$("#block-datanorge-data-description-widget div[class='content']").append(htmlToInsert);
+}
+
+function addLastModified(datanorgedatasets) { // for when data.norge-entry was last modified
+	var nodeId = getNodeId();
+	var dataset = getDataset(nodeId, datanorgedatasets);
+
+	if (dataset) {
+		$("#datanorge-entry-issued").append(dataset.issued);
+		$("#datanorge-entry-modified").append(dataset.modified.replace("T", " "));
+	} else {
+		$("#publisertLi").show();
+		$("#aboutEntryList").hide();
+	}
+}
+
+function addAntall(datanorgedatasets) {
+	var nodeId = getNodeId();
+	var dataset = getDataset(nodeId, datanorgedatasets);
+
+	if (dataset) {
+		$("#datanorge-entry-numDatasets").append(dataset.antall);	
+	} else {
+
+	}	
 }
 
 // TODO: exclude recent datasets. FDK harvests data.norge every night
@@ -188,6 +205,7 @@ function runIt() {
 		  // console.log(data);
 		  var datanorgedatasets = data;
 		  addLastModified(datanorgedatasets);
+		  addAntall(datanorgedatasets);
 		});
 	}
 }

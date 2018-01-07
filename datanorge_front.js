@@ -23,7 +23,6 @@ $("#block-views-data-latest-block").before(htmlToInsert);
 
 function addLatestSection(datanorgedatasets) {
 
-
 // https://stackoverflow.com/a/8837511
 datanorgedatasets.sort(function(a, b){
     var keyA = b.modified,

@@ -3,7 +3,7 @@
 
   "name": "Turbo-tillegg for data.norge",
   "description": "Ekstra funksjonalitet for nettstadane data.norge.no, hotell.difi.no og fellesdatakatalog.brreg.no. Uoffisiell Chrome-utviding.",
-  "version": "0.5",
+  "version": "0.6",
 
   "icons": {
     "128": "app-icon_128x128.png"
