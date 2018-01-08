@@ -1,5 +1,6 @@
 var datanorgeDatasetsURL = "https://livarbergheim.no/api/datanorge_api_dump.php";
 var datanorgeAppsURL = "https://livarbergheim.no/api/datanorge_apps_bydataset_json.php";
+var datanorgeFDKmapURL = "https://livarbergheim.no/api/datanorge_fdk_map.php";
 
 function timeConverter(UNIX_timestamp){
   var multiplier = 0;

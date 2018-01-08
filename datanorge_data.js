@@ -106,9 +106,10 @@ function addAntall(datanorgedatasets) {
 }
 
 // TODO: exclude recent datasets. FDK harvests data.norge every night
-function insertFDKLink() {
+function insertFDKLink(data) {
+	var fdkId = data[getNodeId()];
 	var url = "https://fellesdatakatalog.brreg.no/datasets/" + 
-		encodeURIComponent("https://data.norge.no" + getNodeLink());
+		encodeURIComponent(fdkId);
 
 	$(".dataset.description h1").after("<p><span><i>Sjå <a href=\"" 
 		+ url + "\">dette datasettet i Felles datakatalog</a>.</i></span></p>\n");
@@ -198,7 +199,6 @@ function runIt() {
 		addAppOverview();
 		prepareLastModified();
 		// insertEDPLink();
-		insertFDKLink();
 
 		// Hent data.norge-oversikt
 		$.getJSON( datanorgeDatasetsURL, function( data ) {
@@ -206,6 +206,12 @@ function runIt() {
 		  var datanorgedatasets = data;
 		  addLastModified(datanorgedatasets);
 		  addAntall(datanorgedatasets);
+		});
+
+		// Hent koblingar mellom datasett i data.norge og FDK
+		$.getJSON( datanorgeFDKmapURL, function( data ) {
+		  var datanorgeFDKmap = data;
+		  insertFDKLink(data);
 		});
 	}
 }
