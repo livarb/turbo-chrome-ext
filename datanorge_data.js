@@ -186,6 +186,16 @@ function startDistributionHotelHelper() {
 	}
 }
 
+function removeJSLinkShit() {
+	$('*[data-url] > .table').each(function() {
+		console.log(this);
+		var dataurl = $(this).parent().attr("data-url");
+		$(this).parent().removeAttr("data-url");
+		$(this).wrap('<a href="' + dataurl + '"></a>');
+		$(this).parent().css("text-decoration", "none");
+	});
+}
+
 var datanorgedatasets;
 function runIt() {
 	addTurbo();
@@ -213,6 +223,8 @@ function runIt() {
 		  var datanorgeFDKmap = data;
 		  insertFDKLink(data);
 		});
+
+		removeJSLinkShit();
 	}
 }
 

@@ -38,14 +38,6 @@ var html = "<table>";
 for (var i = 0; i < 7; i++) {
 	var dataset = datanorgedatasets[i];
 
-	/*
-	var html = "<p>" + dataset.modified.replace("T", " ") + " — " 
-		+ '<a href="' + dataset.id + '">'
-		+ dataset.title + " — "
-		+ dataset.publisher.name 
-		+ "</a></p>";
-	*/
-
 	html += "<tr><td>" + dataset.modified.replace("T", " ") + "</td>" 
 		+ '<td><a href="' + dataset.id + '">'
 		+ dataset.title + "</a><br/>"
@@ -64,18 +56,70 @@ $("#edited-content").append(html);
 
 }
 
+function loadData() {
+	chrome.storage.local.get('timestamp', function(data) {
+		if (data.hasOwnProperty('timestamp')) {
+			var timestamp = data.timestamp;
+			var now = Math.floor(Date.now() / 1000);
+			console.log(timestamp);
+			console.log(now);
+			if ((data.timestamp + 300) < now) {
+				loadDataFromAPI();
+			} else {
+				loadDataCached();
+			}
+		} else {
+			loadDataFromAPI();
+		}
+	});	
+}
+
+function loadDataFromAPI() {
+	console.log("Loading from API..");
+
+	// Hent data.norge-oversikt
+	$.getJSON( datanorgeDatasetsURLcached, function( data ) {
+	  runWithData(data.data);
+
+	  chrome.storage.local.set({'datanorge': data.data}, function() {
+	  	if (typeof runtime !== 'undefined') {
+		  	console.log("Failed to store data. Oh noes.");
+	  	} else {
+	  		console.log("Stored data!");
+	  	}
+	  });
+
+	  chrome.storage.local.set({'timestamp': data.etag}, function() {
+	  	if (typeof runtime !== 'undefined') {
+		  	console.log("Failed to store timestamp. Oh noes.");
+	  	} else {
+	  		console.log("Stored timestamp!");
+	  	}
+	  });
+
+	});	
+}
+
+function loadDataCached() {
+	console.log("Loading from local cache..");
+
+	chrome.storage.local.get('datanorge', function(data) {
+	  	runWithData(data.datanorge);
+	});
+}
+
+function runWithData(data) {
+	addLatestSection(data);	
+}
+
 function runIt() {
 	addTurbo();
 	addOrgsToMenu();
 
 	prepareLatestSection();
-
-	// Hent data.norge-oversikt
-	$.getJSON( datanorgeDatasetsURL, function( data ) {
-	  var datanorgedatasets = data;
-	  addLatestSection(datanorgedatasets);
-	});
-
+	loadData();
+	removeJSLinkShit();
+	// testheaders();
 }
 
 $(document).ready(() => runIt());

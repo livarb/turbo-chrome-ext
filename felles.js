@@ -1,4 +1,5 @@
 var datanorgeDatasetsURL = "https://livarbergheim.no/api/datanorge_api_dump.php";
+var datanorgeDatasetsURLcached = "https://livarbergheim.no/api/datanorge_api_dump_cached.php";
 var datanorgeAppsURL = "https://livarbergheim.no/api/datanorge_apps_bydataset_json.php";
 var datanorgeFDKmapURL = "https://livarbergheim.no/api/datanorge_fdk_map.php";
 
@@ -83,4 +84,13 @@ function addOrgsToMenu() {
 
 function getNodeLink() {
   return $("link[rel='shortlink']").attr('href');
+}
+
+function removeJSLinkShit() {
+  $('*[data-url] > .table').each(function() {
+    var dataurl = $(this).parent().attr("data-url");
+    $(this).parent().removeAttr("data-url");
+    $(this).wrap('<a href="' + dataurl + '"></a>');
+    $(this).parent().css("text-decoration", "none");
+  });
 }
