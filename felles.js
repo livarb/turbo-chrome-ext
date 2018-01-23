@@ -46,7 +46,7 @@ function addTurbo() {
   $("header .group .sub-portal p").css({ 'width' : '200px'});
 
   $("footer address ul li:last").removeClass("last");
-  $("footer address ul").append('<li class="last">Turbo-tillegg laga av Livar Bergheim</li>');  
+  $("footer address ul").append('<li class="last"><a href="https://bit.ly/turbotillegg">Turbo-tillegg</a> laga av Livar Bergheim</li>');  
 }
 
 // https://stackoverflow.com/a/18650828
