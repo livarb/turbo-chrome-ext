@@ -9,7 +9,8 @@ function noteUnpublishedDatasets() {
 
 function runIt() {
 	addTurbo();
-	addOrgsToMenu();	
+	addOrgsToMenu();
+	removeJSLinkShit();
 
 	if(document.URL.endsWith("/edit")) {
 		// do nothing if editing entry
