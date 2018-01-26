@@ -55,6 +55,8 @@
   "permissions": [
     "activeTab",
     "storage",
-    "https://ajax.googleapis.com/"
+    "https://ajax.googleapis.com/",
+    "https://livarbergheim.no/",
+    "https://hotell.difi.no/"
   ]
 }
