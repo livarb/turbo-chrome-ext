@@ -2,7 +2,7 @@
   "manifest_version": 2,
 
   "name": "Turbo-tillegg for data.norge",
-  "description": "Ekstra funksjonalitet for nettstadane data.norge.no, hotell.difi.no og fellesdatakatalog.brreg.no. Uoffisiell Chrome-utviding.",
+  "description": "Ekstra funksjonalitet for nettstadane data.norge.no, hotell.difi.no og fellesdatakatalog.brreg.no. Uoffisiell nettlesar-utviding.",
   "version": "0.7",
 
   "icons": {
