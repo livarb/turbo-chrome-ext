@@ -34,7 +34,6 @@ datanorgedatasets.sort(function(a, b){
 });
 
 var html = "<table>";
-// $("#edited-content").append("<table>")
 for (var i = 0; i < 7; i++) {
 	var dataset = datanorgedatasets[i];
 
@@ -43,12 +42,7 @@ for (var i = 0; i < 7; i++) {
 		+ dataset.title + "</a><br/>"
 		+ dataset.publisher.name 
 		+ "</a></<td></tr>";
-
-	// $("#edited-content").append(html);
 }
-// $("#edited-content").append("</table>");
-
-// $("#edited-content").append("<br/>");
 html += "</table><br/>";
 
 $("#edited-content").html("");
@@ -63,7 +57,7 @@ function loadData() {
 			var now = Math.floor(Date.now() / 1000);
 			console.log(timestamp);
 			console.log(now);
-			if ((data.timestamp + 300) < now) {
+			if ((timestamp == 'undefined') || (data.timestamp + 300) < now) {
 				loadDataFromAPI();
 			} else {
 				loadDataCached();
@@ -78,10 +72,11 @@ function loadDataFromAPI() {
 	console.log("Loading from API..");
 
 	// Hent data.norge-oversikt
-	$.getJSON( datanorgeDatasetsURLcached, function( data ) {
-	  runWithData(data.data);
+	$.getJSON( datanorgeDatasetsURL, function( data ) {
+	  runWithData(data); // data.data
 
-	  chrome.storage.local.set({'datanorge': data.data}, function() {
+	  // experimental use of local storage
+	  chrome.storage.local.set({'datanorge': data}, function() {
 	  	if (typeof runtime !== 'undefined') {
 		  	console.log("Failed to store data. Oh noes.");
 	  	} else {
@@ -89,13 +84,14 @@ function loadDataFromAPI() {
 	  	}
 	  });
 
-	  chrome.storage.local.set({'timestamp': data.etag}, function() {
+	  chrome.storage.local.set({'timestamp': Math.floor(Date.now() / 1000)}, function() {
 	  	if (typeof runtime !== 'undefined') {
 		  	console.log("Failed to store timestamp. Oh noes.");
 	  	} else {
 	  		console.log("Stored timestamp!");
 	  	}
 	  });
+	  
 
 	});	
 }
