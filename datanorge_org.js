@@ -5,13 +5,14 @@ function prepareAppList() {
 		<h2 id="appsHeading">Apper/tjenester</h2>
 		<ul>
       		<li id="headingLi"></li>
-      		<li id="loadingLi"> * LASTER *</li>
+      		<li id="loadingLi">Lastar inn informasjon...</li>
   		</ul>
 	</div>
 </div>
 `;
 
 	$("#block-datanorge-organization-organization-info div.content:first").append(htmlToInsert);
+	$("#appsHeading").append(getSpinner("appspinner"));
 }
 
 function runIt() {
@@ -83,7 +84,8 @@ function runIt() {
 			$("#headingLi").remove();
 			$("#appList ul").append('<li>Ingen registrerte døme på bruk av data frå denne organisasjonen.</li>'
 				+ '<li><a href="https://data.norge.no/register/app?brukar">Registrer ein app/tjeneste</a>!</li>');
-		}			  
+		}	
+		$("#appspinner").remove();
 	});	
 }
 

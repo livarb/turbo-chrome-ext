@@ -94,3 +94,8 @@ function removeJSLinkShit() {
     $(this).parent().css("text-decoration", "none");
   });
 }
+
+// Spinner-animation image from https://loading.io/
+function getSpinner(id) {
+  return "<img id=\"" + id + "\" src=\"" + chrome.extension.getURL("Spinner-1.8s-200px.gif") + "\" width=20 height=20/>";
+}

@@ -17,20 +17,21 @@ function addDatahotelUpdated() {
 
 			$.getJSON( fetchUrl, function( data ) {
 				li.find("#datahotelInfo").text("Oppdatert: " + timeConverter(data.updated));				
-			});			
+			});
 		}
-	});
-
-	
+	});	
 }
 
+// TODO: make robust in case of parameters "...?" or http
 function addAppOverview() {
 	var htmlToInsert =
 	'<div id="block-datanorge-data-other-datasets" class="block block-datanorge-data dataset descriptionWidget">'
-	+ '<h2>Bruk av datasettet</h2>'
+	+ '<h2>Bruk av datasettet'
+	+ getSpinner("appspinner")
+	// + "<img id=\"appspinner\" src=\"" + chrome.extension.getURL("Spinner-1.8s-200px.gif") + "\" width=20 height=20/>"
+	+ '</h2>'
 	+ '<div class="content" id="appList"><ul id="appListUl">'
 	+ '<li>Lastar inn informasjon...</li>'
-//    + '<li><span><a href="/data/landbruksdirektoratet/leveranser-til-kornkjøper-eller-såvareforretning-i-landbruket-i-2">Leveranser til kornkjøper eller såvareforretning i landbruket i kornåret juli 2015 til juni 2016</a></span></li>'
 	+ '</ul></div></div>';
 
 	$(".region.region-sidebar-right-third").append(htmlToInsert);
@@ -43,14 +44,14 @@ function addAppOverview() {
 			var apps = apps_bydataset[document.URL];
 			for (var i = 0; i < apps.length; i++) {
 				var app = apps[i];
-				console.log(app);
 				var html = '<li><span><a href="' + app.url + '">' + app.title + "</a></span></li>";
 				$("#appList ul").append(html);
 			}
 		} else {
 			$("#appList ul").append('<li>Ingen registrerte døme på bruk av dette datasettet.</li>'
 				+ '<li><a href="https://data.norge.no/register/app?brukar">Registrer ein app/tjeneste</a>!</li>');
-		}			  
+		}			
+		$("#appspinner").remove();  
 	});
 }
 
@@ -59,8 +60,6 @@ function getNodeId() {
 }
 
 function prepareLastModified() { // for when data.norge-entry was last modified
-
-	// $("#block-datanorge-data-description-widget div[class='content'] ul li:nth-child(2)").remove();
 	$("#block-datanorge-data-description-widget div[class='content'] ul li").each(function (index) {
 		if ($(this).text().includes("Publisert:")) {
 			$(this).attr('id', 'publisertLi');
@@ -68,7 +67,9 @@ function prepareLastModified() { // for when data.norge-entry was last modified
 		}
 	});
 
-	var htmlToInsert = '<ul id="aboutEntryList"><h2>Data.norge-oppføring</h2>'
+	var htmlToInsert = '<ul id="aboutEntryList"><h2>Data.norge-oppføring'
+	+ getSpinner("oppforingspinner")
+	+ '</h2>'
 	+ '<li id="datanorge-entry-issued"><strong>Publisert: &nbsp;&nbsp;</strong></li>'	
 	+ '<li id="datanorge-entry-modified"><strong>Oppdatert: </strong></li>'
 	+ '<li id="datanorge-entry-numDatasets"><strong title="Brukes til ' 
@@ -107,20 +108,73 @@ function addAntall(datanorgedatasets) {
 
 // TODO: exclude recent datasets. FDK harvests data.norge every night
 function insertFDKLink(data) {
-	var fdkId = data[getNodeId()];
-	var url = "https://fellesdatakatalog.brreg.no/datasets/" + 
-		encodeURIComponent(fdkId);
+	$(".dataset.description h1").after(
+		"<p id=\"fdklink\"><span><i>Sjå <a id=\"fdklinka\" href=\"#" 
+		+ "\">dette datasettet i Felles datakatalog</a>.</i></span>"
+		+ getSpinner("fdklinkspinner")
+//		+ "<img id=\"fdklinkspinner\" src=\"" + chrome.extension.getURL("Spinner-1.8s-200px.gif") + "\" width=20 height=20/>"
+		+ "</p>\n");	
 
-	$(".dataset.description h1").after("<p><span><i>Sjå <a href=\"" 
-		+ url + "\">dette datasettet i Felles datakatalog</a>.</i></span></p>\n");
+	// Hent koblingar mellom datasett i data.norge og FDK
+	$.getJSON( datanorgeFDKmapURL, function( data ) {
+		var datanorgeFDKmap = data;
+		var fdkId = data[getNodeId()];
+		var url = "https://fellesdatakatalog.brreg.no/datasets/" + 
+			encodeURIComponent(fdkId);
+
+		if (fdkId === undefined) {
+			$("#fdklink")
+				.attr("title", 
+					"FDK haustar inn data frå data.norge ein gang i døgnet. "
+					+ "Dette datasettet kan vere for nytt til å kome med her.")
+				.css("text-decoration", "line-through");
+		} else {
+			$("#fdklinka").attr("href", url);
+		}
+		$("#fdklinkspinner").remove();
+	});
 }
 
-// TODO: exclude link from recent datasets. EDP harvests weekly(?)
 function insertEDPLink() {
-	var url = "https://www.europeandataportal.eu/data/en/dataset/http---data-norge-no-node-" + getNodeId();
+	$(".dataset.description h1").after(
+		"<p id=\"edplink\"><span><i>Sjå <a id=\"edplinka\" href=\"#\">"
+		+ "dette datasettet i European data portal (EDP)</a>.</i></span>"
+		+ getSpinner("edplinkspinner")
+		// + "<img id=\"edplinkspinner\" src=\"" + chrome.extension.getURL("Spinner-1.8s-200px.gif") + "\" width=20 height=20/>"
+		+ "</p>\n");
 
-	$(".dataset.description h1").after("<p><span><i>Sjå <a href=\"" 
-		+ url + "\">dette datasettet i European data portal (EDP)</a>.</i></span></p>\n");
+	var url1 = "https://www.europeandataportal.eu/data/en/dataset/http-data-norge-no-node-" + getNodeId();
+	var url2 = "https://www.europeandataportal.eu/data/en/dataset/http---data-norge-no-node-" + getNodeId();	
+
+	// Try first URL-format
+	$.ajax({
+		method: 'HEAD',
+		url: url1,
+		success: function(data, textStatus, request) {
+			$("#edplinka").attr("href", url1);
+			$("#edplinkspinner").remove();
+		},
+		error: function() {
+			// Try second URL-format on failure of first
+			$.ajax({
+				method: 'HEAD',
+				url: url2,
+				success: function(data, textStatus, request) {
+					$("#edplinka").attr("href", url2);
+					$("#edplinkspinner").remove();					
+				},
+				error: function() {
+					$("#edplink")
+						.attr("title",
+							"EDP hentar data frå data.norge.no ein "
+						+ "gang i veka. Dersom dette datasettet er nyleg "
+						+ "publisert, vil det ikkje vere synleg der endå.")
+						.css("text-decoration", "line-through");
+					$("#edplinkspinner").remove();
+				}
+			});
+		}
+	});
 }
 
 // Abandoned experiment
@@ -208,7 +262,8 @@ function runIt() {
 		addDatahotelUpdated();
 		addAppOverview();
 		prepareLastModified();
-		// insertEDPLink();
+		insertEDPLink();
+		insertFDKLink();		
 
 		// Hent data.norge-oversikt
 		$.getJSON( datanorgeDatasetsURL, function( data ) {
@@ -216,12 +271,7 @@ function runIt() {
 		  var datanorgedatasets = data;
 		  addLastModified(datanorgedatasets);
 		  addAntall(datanorgedatasets);
-		});
-
-		// Hent koblingar mellom datasett i data.norge og FDK
-		$.getJSON( datanorgeFDKmapURL, function( data ) {
-		  var datanorgeFDKmap = data;
-		  insertFDKLink(data);
+		  $("#oppforingspinner").remove();
 		});
 
 		removeJSLinkShit();
