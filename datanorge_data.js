@@ -1,22 +1,35 @@
 function addDatahotelUpdated() {
-	var htmlToInsert = 
-	'<div style="background-color: #e0e0e0; display: inline-block; width: 100%;'
-    + 'line-height: 11px; color: black; font-size: 11px; '
-    + 'border-top: 1px solid #c6c6c6; padding: 9px; font-weight: 500;"><span id="datahotelInfo">Lastar informasjon...</span></div>';
-
 	$('li[data-url]').each(function() {
-		if ($(this).attr('data-url').startsWith("http://hotell.difi.no/") || $(this).attr('data-url').startsWith("https://hotell.difi.no/")) {
+		if ($(this).attr('data-url').startsWith("http://hotell.difi.no/") 
+			|| $(this).attr('data-url').startsWith("https://hotell.difi.no/")) {
+
+			var distId = $(this).attr("data-url").replace(/\W/g, '');
+			var htmlToInsert = 
+			'<div id="datahotelInfo-' + distId + '" style="background-color: #e0e0e0; display: inline-block; width: 100%;'
+		    + 'line-height: 11px; color: black; font-size: 11px; '
+		    + 'border-top: 1px solid #c6c6c6; padding: 9px; font-weight: 500;">'
+		    + '<span id="datahotelInfo-' + distId + '">Lastar informasjon...'
+		    + getSpinner("datahotelupdatedSpinner-" + distId)
+		    + '</span></div>';			
+
 			$(this).append(htmlToInsert);
-			var remove1 = 'http://hotell.difi.no/?dataset=';
-			var remove2 = 'https://hotell.difi.no/?dataset=';
-			var url = $(this).attr('data-url').replace(remove1, "");
-			var url = url.replace(remove2, "");
-			var url = url.replace("http://hotell.difi.no/api/html/", "");	
+
+			var url = $(this).attr('data-url')
+				.replace("http://hotell.difi.no/?dataset=", "")
+				.replace("https://hotell.difi.no/?dataset=", "")
+				.replace("http://hotell.difi.no/api/html/", "");	
 			var fetchUrl = "https://hotell.difi.no/api/json/" + url + "/meta";
 			var li = $(this);
 
-			$.getJSON( fetchUrl, function( data ) {
-				li.find("#datahotelInfo").text("Oppdatert: " + timeConverter(data.updated));				
+			$.ajax({
+			  dataType: "json",
+			  url: fetchUrl,
+			  success: function(data) {
+				li.find("#datahotelInfo-" + distId).text("Oppdatert: " + timeConverter(data.updated));	
+			  },
+			  error: function() {
+				$("#datahotelInfo-" + distId).remove();
+			  }
 			});
 		}
 	});	
