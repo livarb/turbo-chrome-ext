@@ -1,6 +1,6 @@
 # Turbo-extension for data.norge.no++
 
-Browser-extension for adding extra functionality to [data.norge.no](https://data.norge.no/), [hotell.difi.no](https://hotell.difi.no) and [fellesdatakatalog.brreg.no](https://fellesdatakatalog.brreg.no). This is an unofficial extension. See [blog-post for introduction to what the extension does](https://medium.com/@livar.bergheim/become-a-superuser-of-data-norge-no-and-hotell-difi-no-8c3503364d90).
+Browser-extension for adding extra functionality to [data.norge.no](https://data.norge.no/), [hotell.difi.no](https://hotell.difi.no) and [fellesdatakatalog.brreg.no](https://fellesdatakatalog.brreg.no) (FDK). This is an unofficial extension. See [blog-post for introduction to what the extension does](https://medium.com/@livar.bergheim/become-a-superuser-of-data-norge-no-and-hotell-difi-no-8c3503364d90).
 
 ### Note that websites are in norwegian
 Note that [data.norge.no](https://data.norge.no/) and [hotell.difi.no](https://hotell.difi.no) are only available in norwegian, while [fellesdatakatalog.brreg.no](https://fellesdatakatalog.brreg.no) is also available in english, although much of the content is only in norwegian. This Github-repository and the blog-post is in english to be more easily accessible for people who are interested in open data or writing browser-extensions.
@@ -31,9 +31,10 @@ Example: [enhetsregisteret](https://data.norge.no/data/registerenheten-i-br%C3%B
 - Show list of apps/services that use the dataset
 - Show last-modified time of any distributions pointing to hotell.difi.no.
 - Creates new section with metadata for the data.norge-entry ("Data.norge-oppføring")
--- Moves date of when entry was published to this section, to not confuse date with when dataset was published, which may differ from when the data-entry in data.norge was published
--- Adds last-modified timestamp for dataset-entry
--- Adds "number of datasets"
+ - Moves date of when entry was published to this section, to not confuse date with when dataset was published, which may differ from when the data-entry in data.norge was published
+ - Adds last-modified timestamp for dataset-entry
+ - Adds "number of datasets" (internal number used for statistics)
+- Add link to corresponding dataset-entry in FDK, since FDK automatically imports all dataset-entries in data.norge.no.
 
 #### Organisation-page
 Example: [Kartverket](https://data.norge.no/organisasjoner/statens-kartverk)
@@ -42,6 +43,14 @@ Example: [Kartverket](https://data.norge.no/organisasjoner/statens-kartverk)
 #### List of organisations on data.norge.no
 https://data.norge.no/organisasjoner
 - show number of apps/services that use at least one dataset from the organisation
+
+#### App-pages
+Example: [Trafikkhub](https://data.norge.no/app/trafikkhub)
+- show a placeholder-text in case the app-entry points to a dataset that has been unpublished.
+
+#### Node-URLs
+e.g. data.norge.no/node/X  where X is a running number corresponding to some content-type in Drupal.
+The extension will fetch the canonical URL and redirect your browser to this, so you're always at the "pretty" url.
 
 ### Hotell.difi.no
 
@@ -53,12 +62,13 @@ Example: https://hotell.difi.no/?dataset=bergen/dokart
 - Show last-modified timestamp
 - Show title of dataset stored in data hotel
 - Fetch information from the dataset's entry in data.norge.no
--- Show title of dataset and publisher's name
--- Add link to go to data.norge-entry, where you find important information such as contact info, update frequency, terms of use/license/attribution, information about data quality++
-- Show size of dataset 
+ - Show title of dataset and publisher's name
+ - Add link to go to data.norge-entry, where you find important information such as contact info, update frequency, terms of use/license/attribution, information about data quality++
+ - Will show a warning if the dataset you're viewing doesn't have a corresponding entry in data.norge.no.
+- Show size of dataset (if you download the entire dataset as CSV)
 
 ### Fellesdatakatalog.brreg.no (FDK)
 
 #### Data-entry
-Example: [Kvalitet på nett - resultatliste 2016](https://fellesdatakatalog.brreg.no/datasets/a82e6eb7-6b59-4264-9def-1dc2ad913b36)
+Example: [Dataset: Kvalitet på nett - resultatliste 2016](https://fellesdatakatalog.brreg.no/datasets/a82e6eb7-6b59-4264-9def-1dc2ad913b36)
 - show link to corresponding entry in data.norge.no. Only for entries in FDK which have been imported from data.norge.no
