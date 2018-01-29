@@ -1,16 +1,10 @@
 function runIt() {
-	console.log("datahotell frontpage, jeah!");
 	addTurbo();
-
-	reactToHash();
 
 	// Fjern henvisning til data.norge.no
 	$("#brukerveiledning").html('');
 
-	showListOfDatasets();
-
-	// TODO: list in stead of pull-down
-	// $("#datasets").show();
+	reactToHash();
 }
 
 // TODO: eksperimentelt.
@@ -19,14 +13,19 @@ function reactToHash() {
 	var hash = location.hash;
 	if (hash) {
 		if (hash.indexOf("=") !== -1) {
-			console.log(hash);
+			var hashSplit = hash.substr(1).split("=");
+			if (hashSplit[0] == "statistikk") {
+				$("#brukerveiledning").text("Statistikk for " + hashSplit[1]);
+				$("#brukerveiledning").append(getSpinner("statisticsSpinner"));
+				showDatahotelStatistics(hashSplit[1]);
+			}
+
+		} else {
+			$("#brukerveiledning").text(hash.substr(1));
 		}
 
-		var hashSplit = hash.split("=");
-		$("#brukerveiledning").text(hash.substr(1));
-
 	} else {
-		console.log("no hash..");
+		showListOfDatasets();
 	}
 }
 
@@ -35,7 +34,6 @@ function showListOfDatasets() {
 
 	$.getJSON( fetchUrl, function( data ) {
 		var html;
-		console.log(data);
 		html = '<strong>Datasett (' + data.length + ')</strong><br/><br/>'
 			+ '<table style="text-align: left;"><tr><th>Namn</th><th>Lokasjon</th></tr>';
 
@@ -57,6 +55,76 @@ function showListOfDatasets() {
 		html += '</table>';
 		$("#datasets").html(html);
 		$("#datasets").show();
+	});
+}
+
+// https://stackoverflow.com/a/2901298
+const numberWithSeparator = (x) => {
+  var parts = x.toString().split(".");
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  return parts.join(".");
+}
+
+function showDatahotelStatistics(datasetLocation) {
+	var statisticsUrl = "https://hotell.difi.no/download/difi/datahotell/sidevisninger-pr-datasett?download";
+    $.ajax({
+        url: statisticsUrl,
+        type: 'get',
+        success: function(data) {
+        	// console.log(data);
+        	var stats = [];
+        	$.csv.toObjects(data, {"separator": ";"}).forEach(function (element) {
+        		if (element.dataset_location == datasetLocation) {
+        			stats.push(element);
+        		}
+        	});
+        	console.log(stats);
+
+        	$("#brukerveiledning").append(
+        		"<table id=\"statsTable\" style=\"border-spacing: 7px; border-collapse: separate;\"><tr>"
+        		+ "<th>Periode</th>"
+        		+ "<th>Totalt</th>"
+        		+ "<th>JSON</th>"
+        		+ "<th>JSONP</th>"
+        		+ "<th>XML</th>"
+        		+ "<th>CSV</th>"
+        		+ "<th>Nedlastingar</th>"
+        		+ "<th>Trafikk</th>"        		
+        		+ "</tr></table>"
+        		);
+        	stats.forEach(function (element) {
+        		$("#statsTable").append(
+        			"<tr>"
+        			+ "<td align=\"left\">" + element.year + "-" + element.month + "</td>"
+        			+ "<td align=\"right\">" 
+        				+ numberWithSeparator(element.total_pageviews)
+        				+ "</td>"
+        			+ "<td align=\"right\">" 
+        				+ numberWithSeparator(element.json)
+        				+ "</td>"
+        			+ "<td align=\"right\">" 
+        				+ numberWithSeparator(element.jsonp)
+        				+ "</td>"
+        			+ "<td align=\"right\">" 
+        				+ numberWithSeparator(element.xml)
+        				+ "</td>"
+        			+ "<td align=\"right\">" 
+        				+ numberWithSeparator(element.csv)
+        				+ "</td>"        				        				        				
+        			+ "<td align=\"right\">" 
+        				+ numberWithSeparator(element.download)
+        				+ "</td>"
+        			+ "<td align=\"right\">" 
+        				+ element.traffic_hr
+        				+ "</td>"          				        				
+        			+ "</tr>");
+        	});
+        	// $("#statsTable tr:eq(0)").after("<tr><td>test</td></tr>");
+        	$("#statisticsSpinner").remove();
+        },
+        error: function () {
+        	alert("Feil ved henting av hotell-statistikk.");
+        }
 	});
 }
 

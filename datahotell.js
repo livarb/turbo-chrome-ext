@@ -19,7 +19,12 @@ function addDatahotelDatasetTitle(data) {
 }
 
 function addLinkToFields(dataset) {
-	$("#searchSubtext2").html('<a href="https://hotell.difi.no/api/json/' + dataset + '/fields">Feltdefinsjonar (JSON)</a>');
+	$("#searchSubtext2").html(
+		'<p><a href="https://hotell.difi.no/api/json/'
+		+ dataset
+		+ '/fields">Feltdefinsjonar (JSON)</a></p>'
+		);
+	$("#searchSubtext2").append("<p><a href=\"/#statistikk=" + dataset + "\">Statistikk</p>");
 }
 
 function prepareDatanorgeLink() {
@@ -41,8 +46,6 @@ function addDatanorgeLink(datasetLocation, datanorgedatasets) {
 					var datasett = dist.accessURL.split("=")[1];
 
 					if (datasetLocation == datasett) {
-						console.log(dist);
-						console.log(dataset);
 						dataNorgeDataset = dataset;
 						break datasetLoop;		
 					}
