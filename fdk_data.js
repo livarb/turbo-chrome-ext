@@ -1,4 +1,4 @@
-function insertDatanorgeLink(data) {
+function insertDatanorgeAndEDPLink(data) {
 	var datanorgeFDKmap = data;
 
 	var url = document.URL.split("/");
@@ -23,12 +23,47 @@ function insertDatanorgeLink(data) {
 	}
 }
 
+function swapToRichDescription(data) {
+	var datanorgeFDKmap = data;
+
+	var url = document.URL.split("/");
+	var datasetIdRaw = url[url.length-1];
+
+	var datasetId = decodeURIComponent(datasetIdRaw);		
+
+	if (datanorgeFDKmap.hasOwnProperty(datasetId)) {
+		$("p.fdk-ingress").prepend( getSpinner("descriptionSpinner") );
+
+		var dataNorgeUrl = "https://data.norge.no/node/" + datanorgeFDKmap[datasetId];
+
+		$.getJSON( datanorgeDatasetsURL, function( data ) {
+		  var datanorgedatasets = data;
+		  var dataset = getDataset(datanorgeFDKmap[datasetId], datanorgedatasets);
+		  console.log(dataset);
+		  if (dataset.description.length > 1) {
+		  	if (dataset.description[0].language == "nb") {
+		  		$("p.fdk-ingress").html(dataset.description[0].value);		  		
+		  	} else if (dataset.description[1].language == "nb") {
+		  		$("p.fdk-ingress").html(dataset.description[1].value);		  				  		
+		  	} else {
+		  		console.log("TURBO-ERROR: could not insert the right description!");
+		  		$("#descriptionSpinner").remove();
+		  	}
+		  } else {
+		  	$("p.fdk-ingress").html(dataset.description[0].value);
+		  }
+		});				
+
+	}	
+}
+
 function runIt() {
 	console.log("turbo enabled!");
 
 	// Hent koblingar mellom datasett i data.norge og FDK
 	$.getJSON( datanorgeFDKmapURL, function( data ) {
-	  insertDatanorgeLink(data);
+	  insertDatanorgeAndEDPLink(data);
+	  swapToRichDescription(data);
 	});
 }
 
