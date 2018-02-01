@@ -98,3 +98,41 @@ function removeJSLinkShit() {
 function getSpinner(id) {
   return "<img id=\"" + id + "\" src=\"" + chrome.extension.getURL("Spinner-1.8s-200px.gif") + "\" width=20 height=20/>";
 }
+
+function fetchAndAddEDPLink(nodeId) {
+  var url1 = "https://www.europeandataportal.eu/data/en/dataset/http-data-norge-no-node-" + nodeId;
+  var url2 = "https://www.europeandataportal.eu/data/en/dataset/http---data-norge-no-node-" + nodeId;  
+  
+  // Try first URL-format
+  $.ajax({
+    method: 'HEAD',
+    url: url1,
+    timeout: 1500,
+    success: function(data, textStatus, request) {
+      $("#edplinka").attr("href", url1);
+      $("#edplinkspinner").remove();
+    },
+    error: function() {
+      // Try second URL-format on failure of first
+      $.ajax({
+        method: 'HEAD',
+        url: url2,
+        timeout: 1500,        
+        success: function(data, textStatus, request) {
+          $("#edplinka").attr("href", url2);
+          $("#edplinkspinner").remove();          
+        },
+        error: function() {
+          console.log("Failed getting data from EDP. 404 or timeout.");
+          $("#edplink")
+            .attr("title",
+              "EDP hentar data frå data.norge.no ein "
+            + "gang i veka. Dersom dette datasettet er nyleg "
+            + "publisert, vil det ikkje vere synleg der endå.")
+            .css("text-decoration", "line-through");
+          $("#edplinkspinner").remove();
+        }
+      });
+    }
+  });
+}

@@ -11,8 +11,15 @@ function insertDatanorgeLink(data) {
 
 		var dataNorgeUrl = "https://data.norge.no/node/" + data[datasetId];
 
-		var htmlToInsert = ' <br/><span id="turboDataNorgeLink"><a href="' + dataNorgeUrl + '">Sjå datasett på data.norge.no</></span>';
-		$("div.fdk-margin-bottom").first().append(htmlToInsert);		
+		var htmlToInsert = ' <br/><div style="margin-top: 10px"><span id="turboDataNorgeLink">'
+			+ '<a href="' + dataNorgeUrl + '">Sjå datasettet i data.norge.no</a></span>'
+			+ '<span id="edplink" style="float: right;">'
+			+ getSpinner("edplinkspinner")
+			+ ' <a id="edplinka" href="#">Sjå datasettet i den Europeiske dataportalen</a> '
+			+ '</span></div>';
+		$("div.fdk-margin-bottom").first().append(htmlToInsert);
+
+		fetchAndAddEDPLink(data[datasetId]);
 	}
 }
 
