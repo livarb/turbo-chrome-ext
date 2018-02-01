@@ -39,7 +39,7 @@ function swapToRichDescription(data) {
 		$.getJSON( datanorgeDatasetsURL, function( data ) {
 		  var datanorgedatasets = data;
 		  var dataset = getDataset(datanorgeFDKmap[datasetId], datanorgedatasets);
-		  console.log(dataset);
+
 		  if (dataset.description.length > 1) {
 		  	if (dataset.description[0].language == "nb") {
 		  		$("p.fdk-ingress").html(dataset.description[0].value);		  		
@@ -52,8 +52,7 @@ function swapToRichDescription(data) {
 		  } else {
 		  	$("p.fdk-ingress").html(dataset.description[0].value);
 		  }
-		});				
-
+		});
 	}	
 }
 
