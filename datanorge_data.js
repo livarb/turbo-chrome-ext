@@ -300,6 +300,12 @@ function removeJSLinkShit() {
 	});
 }
 
+function topAlignDistributions() {
+	$('li[data-url]').each(function() {
+		$(this).css("vertical-align", "top");
+	});	
+}
+
 var datanorgedatasets;
 function runIt() {
 	addTurbo();
@@ -313,7 +319,8 @@ function runIt() {
 		addAppOverview();
 		prepareLastModified();
 		insertEDPLink();
-		insertFDKLink();		
+		insertFDKLink();
+		topAlignDistributions();
 
 		// Hent data.norge-oversikt
 		$.getJSON( datanorgeDatasetsURL, function( data ) {
