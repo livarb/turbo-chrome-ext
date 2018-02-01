@@ -7,7 +7,6 @@ function runIt() {
 	reactToHash();
 }
 
-// TODO: eksperimentelt.
 function reactToHash() {
 	console.log("hash: " + location.hash);
 	var hash = location.hash;
@@ -16,7 +15,8 @@ function reactToHash() {
 			var hashSplit = hash.substr(1).split("=");
 			if (hashSplit[0] == "statistikk") {
 				$("#brukerveiledning").text("Statistikk for " + hashSplit[1]);
-				$("#brukerveiledning").append(getSpinner("statisticsSpinner"));
+				$("#brukerveiledning").append(getSpinner("statisticsSpinner") + "<br/>\n");
+				$("#brukerveiledning").append("NB! Statistikk for periodar før 2017 har feil (manglar data for mange dagar).");
 				showDatahotelStatistics(hashSplit[1]);
 			}
 
@@ -81,7 +81,9 @@ function showDatahotelStatistics(datasetLocation) {
         	console.log(stats);
 
         	$("#brukerveiledning").append(
-        		"<table id=\"statsTable\" style=\"border-spacing: 7px; border-collapse: separate;\"><tr>"
+        		"<table id=\"statsTable\" style=\"border-spacing: 7px; "
+        			+ "border-collapse: separate; "
+        			+ "margin-left: auto; margin-right: auto\"><tr>"
         		+ "<th>Periode</th>"
         		+ "<th>Totalt</th>"
         		+ "<th>JSON</th>"
@@ -120,6 +122,9 @@ function showDatahotelStatistics(datasetLocation) {
         			+ "</tr>");
         	});
         	// $("#statsTable tr:eq(0)").after("<tr><td>test</td></tr>");
+        	$("#brukerveiledning")
+        		.append("<a href=\"https://data.norge.no/data/direktoratet-forvaltning-og-ikt/bes%C3%B8kstal-datahotellet\">"
+        			+ "Datakjelde: besøkstal for datahotellet.</a>");
         	$("#statisticsSpinner").remove();
         },
         error: function () {

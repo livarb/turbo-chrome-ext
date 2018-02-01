@@ -1,3 +1,4 @@
+// TODO: rename function as it also inserts statistics-link
 function addDatahotelUpdated() {
 	$('li[data-url]').each(function() {
 		if ($(this).attr('data-url').startsWith("http://hotell.difi.no/") 
@@ -25,7 +26,12 @@ function addDatahotelUpdated() {
 			  dataType: "json",
 			  url: fetchUrl,
 			  success: function(data) {
-				li.find("#datahotelInfo-" + distId).text("Oppdatert: " + timeConverter(data.updated));	
+				li.find("#datahotelInfo-" + distId).text("Oppdatert: " + timeConverter(data.updated));
+				$("#datahotelInfo-" + distId).append(
+					"<span style=\"float: right;\">"
+					+ "<a href=\"https://hotell.difi.no/#statistikk=" + url + "\" "
+					+ "style=\"text-decoration: none; color: black;\">"
+					+ "Statistikk</a></span>");
 			  },
 			  error: function() {
 				$("#datahotelInfo-" + distId).remove();
@@ -163,6 +169,7 @@ function insertEDPLink() {
 	$.ajax({
 		method: 'HEAD',
 		url: url1,
+		timeout: 1500,
 		success: function(data, textStatus, request) {
 			$("#edplinka").attr("href", url1);
 			$("#edplinkspinner").remove();
@@ -172,11 +179,13 @@ function insertEDPLink() {
 			$.ajax({
 				method: 'HEAD',
 				url: url2,
+				timeout: 1500,				
 				success: function(data, textStatus, request) {
 					$("#edplinka").attr("href", url2);
 					$("#edplinkspinner").remove();					
 				},
 				error: function() {
+					console.log("Failed getting data from EDP. 404 or timeout.");
 					$("#edplink")
 						.attr("title",
 							"EDP hentar data frå data.norge.no ein "
@@ -282,8 +291,10 @@ function runIt() {
 		$.getJSON( datanorgeDatasetsURL, function( data ) {
 		  // console.log(data);
 		  var datanorgedatasets = data;
+		  var dataset = getDataset(getNodeId(), datanorgedatasets);
 		  addLastModified(datanorgedatasets);
 		  addAntall(datanorgedatasets);
+		  // TODO: addLandingPage
 		  $("#oppforingspinner").remove();
 		});
 
