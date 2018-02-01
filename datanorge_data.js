@@ -56,22 +56,50 @@ function addAppOverview() {
 	$(".region.region-sidebar-right-third").append(htmlToInsert);
 
 	// Hent data.norge-oversikt
-	$.getJSON( datanorgeAppsURL, function( data ) {
-		var apps_bydataset = data;
-		$("#appListUl").html("");
-		if (apps_bydataset.hasOwnProperty(document.URL)) {
-			var apps = apps_bydataset[document.URL];
-			for (var i = 0; i < apps.length; i++) {
-				var app = apps[i];
-				var html = '<li><span><a href="' + app.url + '">' + app.title + "</a></span></li>";
-				$("#appList ul").append(html);
+	$.ajax({
+		method: 'GET',
+		url: datanorgeAppsURL,
+		timeout: 5000,
+		success: function(data, textStatus, request) {
+			var apps_bydataset = data;
+			$("#appListUl").html("");
+			if (apps_bydataset.hasOwnProperty(document.URL)) {
+				var apps = apps_bydataset[document.URL];
+				for (var i = 0; i < apps.length; i++) {
+					var app = apps[i];
+					var html = '<li><span><a href="' + app.url + '">' + app.title + "</a></span></li>";
+					$("#appList ul").append(html);
+				}
+			} else {
+				$("#appList ul").append('<li>Ingen registrerte døme på bruk av dette datasettet.</li>'
+					+ '<li><a href="https://data.norge.no/register/app?brukar">Registrer ein app/tjeneste</a>!</li>');
 			}
-		} else {
-			$("#appList ul").append('<li>Ingen registrerte døme på bruk av dette datasettet.</li>'
-				+ '<li><a href="https://data.norge.no/register/app?brukar">Registrer ein app/tjeneste</a>!</li>');
-		}			
-		$("#appspinner").remove();  
+			$("#appspinner").remove();
+		},
+		error: function() {
+			$("#appListUl").html("");
+			$("#appList ul").append('<li>Feil. Kunne ikkje hente data om apper/tjenester. Prøv igjen seinare.</li>');
+			$("#appspinner").remove();  
+		}
 	});
+
+	// $.getJSON( datanorgeAppsURL, function( data ) {
+	// 	var apps_bydataset = data;
+	// 	$("#appListUl").html("");
+	// 	if (apps_bydataset.hasOwnProperty(document.URL)) {
+	// 		var apps = apps_bydataset[document.URL];
+	// 		for (var i = 0; i < apps.length; i++) {
+	// 			var app = apps[i];
+	// 			var html = '<li><span><a href="' + app.url + '">' + app.title + "</a></span></li>";
+	// 			$("#appList ul").append(html);
+	// 		}
+	// 	} else {
+	// 		$("#appList ul").append('<li>Ingen registrerte døme på bruk av dette datasettet.</li>'
+	// 			+ '<li><a href="https://data.norge.no/register/app?brukar">Registrer ein app/tjeneste</a>!</li>');
+	// 	}			
+	// 	$("#appspinner").remove();  
+	// });
+
 }
 
 function getNodeId() {
