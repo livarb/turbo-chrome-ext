@@ -47,7 +47,6 @@ function addAppOverview() {
 	'<div id="block-datanorge-data-other-datasets" class="block block-datanorge-data dataset descriptionWidget">'
 	+ '<h2>Bruk av datasettet'
 	+ getSpinner("appspinner")
-	// + "<img id=\"appspinner\" src=\"" + chrome.extension.getURL("Spinner-1.8s-200px.gif") + "\" width=20 height=20/>"
 	+ '</h2>'
 	+ '<div class="content" id="appList"><ul id="appListUl">'
 	+ '<li>Lastar inn informasjon...</li>'
@@ -82,24 +81,6 @@ function addAppOverview() {
 			$("#appspinner").remove();  
 		}
 	});
-
-	// $.getJSON( datanorgeAppsURL, function( data ) {
-	// 	var apps_bydataset = data;
-	// 	$("#appListUl").html("");
-	// 	if (apps_bydataset.hasOwnProperty(document.URL)) {
-	// 		var apps = apps_bydataset[document.URL];
-	// 		for (var i = 0; i < apps.length; i++) {
-	// 			var app = apps[i];
-	// 			var html = '<li><span><a href="' + app.url + '">' + app.title + "</a></span></li>";
-	// 			$("#appList ul").append(html);
-	// 		}
-	// 	} else {
-	// 		$("#appList ul").append('<li>Ingen registrerte døme på bruk av dette datasettet.</li>'
-	// 			+ '<li><a href="https://data.norge.no/register/app?brukar">Registrer ein app/tjeneste</a>!</li>');
-	// 	}			
-	// 	$("#appspinner").remove();  
-	// });
-
 }
 
 function getNodeId() {
@@ -153,14 +134,18 @@ function addAntall(datanorgedatasets) {
 	}	
 }
 
+function createDivForLinks() {
+	$(".dataset.description h1").after(
+		'<div id="linkArea" style="margin-top: -5px; margin-bottom: 15px;"></div>');
+}
+
 // TODO: exclude recent datasets. FDK harvests data.norge every night
 function insertFDKLink(data) {
-	$(".dataset.description h1").after(
-		"<p id=\"fdklink\"><span><i>Sjå <a id=\"fdklinka\" href=\"#" 
-		+ "\">dette datasettet i Felles datakatalog</a>.</i></span>"
+	$("#linkArea").append(
+		"<span id=\"fdklink\"><i>Sjå <a id=\"fdklinka\" href=\"#" 
+		+ "\">dette datasettet i Felles datakatalog</a>. </i>"
 		+ getSpinner("fdklinkspinner")
-//		+ "<img id=\"fdklinkspinner\" src=\"" + chrome.extension.getURL("Spinner-1.8s-200px.gif") + "\" width=20 height=20/>"
-		+ "</p>\n");	
+		+ "</span>\n");
 
 	// Hent koblingar mellom datasett i data.norge og FDK
 	$.getJSON( datanorgeFDKmapURL, function( data ) {
@@ -183,12 +168,13 @@ function insertFDKLink(data) {
 }
 
 function insertEDPLink() {
-	$(".dataset.description h1").after(
-		"<p id=\"edplink\"><span><i>Sjå <a id=\"edplinka\" href=\"#\">"
-		+ "dette datasettet i European data portal (EDP)</a>.</i></span>"
+	$("#linkArea").append(
+		"<span id=\"edplink\" style=\"float: right;\">"
 		+ getSpinner("edplinkspinner")
+		+ " <i>Sjå <a id=\"edplinka\" href=\"#\">"
+		+ "dette datasettet i European data portal (EDP)</a>.</i>"
 		// + "<img id=\"edplinkspinner\" src=\"" + chrome.extension.getURL("Spinner-1.8s-200px.gif") + "\" width=20 height=20/>"
-		+ "</p>\n");
+		+ "</span>\n");
 
 	fetchAndAddEDPLink( getNodeId() );
 }
@@ -284,13 +270,15 @@ function runIt() {
 		addDatahotelUpdated();
 		addAppOverview();
 		prepareLastModified();
+
+		createDivForLinks();
 		insertEDPLink();
 		insertFDKLink();
+
 		topAlignDistributions();
 
 		// Hent data.norge-oversikt
 		$.getJSON( datanorgeDatasetsURL, function( data ) {
-		  // console.log(data);
 		  var datanorgedatasets = data;
 		  var dataset = getDataset(getNodeId(), datanorgedatasets);
 		  addLastModified(datanorgedatasets);
