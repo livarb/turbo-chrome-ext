@@ -13,7 +13,6 @@ The extension is currently available for:
 You can also download the source code and manually add the extension in your own browser.
 
 ## Functionality
-NB. Some minor functionality is yet to be described.
 
 ### Data.norge.no
 
@@ -21,7 +20,6 @@ NB. Some minor functionality is yet to be described.
 - Add Turbo to site title
 - Add note to site footer
 - Add shortcut to Organization-page in main menu ("Orgs")
-- Changes javascript-based links to normal links so it's possible to open in a new window (v0.7)
 
 #### Front page
 - Shows last modified dataset-entries ("Sist redigerte data-oppføringer")
@@ -38,15 +36,16 @@ Example: [enhetsregisteret](https://data.norge.no/data/registerenheten-i-br%C3%B
 
 #### Organisation-page
 Example: [Kartverket](https://data.norge.no/organisasjoner/statens-kartverk)
-- show list of apps/services that use at least one dataset from the organisation
+- Show list of apps/services that use at least one dataset from the organisation
 
 #### List of organisations on data.norge.no
 https://data.norge.no/organisasjoner
-- show number of apps/services that use at least one dataset from the organisation
+- Show number of apps/services that use at least one dataset from the organisation
 
 #### App-pages
 Example: [Trafikkhub](https://data.norge.no/app/trafikkhub)
-- show a placeholder-text in case the app-entry points to a dataset that has been unpublished.
+- Show name of publisher (in addition to dataset title) in list of datasets used (v0.8)
+- Show a placeholder-text in case the app-entry points to a dataset that has been unpublished.
 
 #### Node-URLs
 e.g. data.norge.no/node/X  where X is a running number corresponding to some content-type in Drupal.
@@ -66,9 +65,21 @@ Example: https://hotell.difi.no/?dataset=bergen/dokart
  - Add link to go to data.norge-entry, where you find important information such as contact info, update frequency, terms of use/license/attribution, information about data quality++
  - Will show a warning if the dataset you're viewing doesn't have a corresponding entry in data.norge.no.
 - Show size of dataset (if you download the entire dataset as CSV)
+- Show link to display statistics for current dataset (v0.8)
+- Show link to show field-definitions (raw JSON from API)
+
+#### Dataset-statistics (v0.8)
+Example: https://hotell.difi.no/#statistikk=brreg/enhetsregisteret (only available in extension)
+- Fetched statistics for the entire datahotel and extracts data for a given dataset.
+- Statistics show pageviews/API-calls for JSON, JSONP, CSV, XML, downloads and total sum pr. month.
+- Draws line-chart with lines for JSON(P), XML, CSV, downloads and total.
+- Shows table with all data.
 
 ### Fellesdatakatalog.brreg.no (FDK)
 
 #### Data-entry
 Example: [Dataset: Kvalitet på nett - resultatliste 2016](https://fellesdatakatalog.brreg.no/datasets/a82e6eb7-6b59-4264-9def-1dc2ad913b36)
-- show link to corresponding entry in data.norge.no. Only for entries in FDK which have been imported from data.norge.no
+- Show links to see dataset in other dataportals. Only for entries in FDK which have been imported from data.norge.no
+ - data.norge.no
+ - Europeandataportal.eu (EDP) (v0.8)
+- Replace description-text with formatted description (paragraphs, line breaks, bold format, links++). Only for entries in FDK which have been imported from data.norge.no (v0.8)
