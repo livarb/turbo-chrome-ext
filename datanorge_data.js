@@ -1,10 +1,11 @@
 // TODO: rename function as it also inserts statistics-link
 function addDatahotelUpdated() {
-	$('li[data-url]').each(function() {
-		if ($(this).attr('data-url').startsWith("http://hotell.difi.no/") 
-			|| $(this).attr('data-url').startsWith("https://hotell.difi.no/")) {
+	$('div.dataset.availableFormats ul li').each(function() {
+		var dataurl = $(this).children(":first").attr("href");
+		if (dataurl.startsWith("http://hotell.difi.no/") 
+			|| dataurl.startsWith("https://hotell.difi.no/")) {
 
-			var distId = $(this).attr("data-url").replace(/\W/g, '');
+			var distId = dataurl.replace(/\W/g, '');
 			var htmlToInsert = 
 			'<div id="datahotelInfo-' + distId + '" style="background-color: #e0e0e0; display: inline-block; width: 100%;'
 		    + 'line-height: 11px; color: black; font-size: 11px; '
@@ -15,7 +16,7 @@ function addDatahotelUpdated() {
 
 			$(this).append(htmlToInsert);
 
-			var url = $(this).attr('data-url')
+			var url = dataurl
 				.replace("http://hotell.difi.no/?dataset=", "")
 				.replace("https://hotell.difi.no/?dataset=", "")
 				.replace("http://hotell.difi.no/api/html/", "");	
@@ -243,7 +244,7 @@ function startDistributionHotelHelper() {
 }
 
 function topAlignDistributions() {
-	$('li[data-url]').each(function() {
+	$('div.dataset.availableFormats ul li').each(function() {
 		$(this).css("vertical-align", "top");
 	});	
 }
