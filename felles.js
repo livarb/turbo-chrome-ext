@@ -134,3 +134,22 @@ function isInt(value) {
          parseInt(Number(value)) == value && 
          !isNaN(parseInt(value, 10));
 }
+
+// løysing oppgitt til å vere frå mustache.js
+// https://stackoverflow.com/a/12034334
+var entityMap = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;',
+  '/': '&#x2F;',
+  '`': '&#x60;',
+  '=': '&#x3D;'
+};
+
+function escapeHtml(string) {
+  return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+    return entityMap[s];
+  });
+}

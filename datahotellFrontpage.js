@@ -15,9 +15,12 @@ function reactToHash() {
 			var hashSplit = hash.substr(1).split("=");
 			if (hashSplit[0] == "statistikk") {
 				$("#datasets").hide();
-				$("#brukerveiledning").text("Statistikk for " + hashSplit[1]);
+				$("#brukerveiledning").html(
+					'<b>Statistikk for <a href="https://hotell.difi.no/?dataset=' 
+					+ escapeHtml(hashSplit[1]) + '">'
+					+ escapeHtml(hashSplit[1]) + '</a></b>');
 				$("#brukerveiledning").append(getSpinner("statisticsSpinner") + "<br/>\n");
-				$("#brukerveiledning").append("NB! Statistikk for periodar før 2017 har feil (manglar data for mange dagar).");
+				$("#brukerveiledning").append("NB! Statistikk for periodar før 2017 har feil (manglar data for mange dagar).<br/>");
 				showDatahotelStatistics(hashSplit[1]);
 				$("#brukerveiledning").show();
 			}
@@ -74,9 +77,9 @@ function showDatahotelStatistics(datasetLocation) {
 	var statisticsUrl = "https://hotell.difi.no/download/difi/datahotell/sidevisninger-pr-datasett?download";
     $.ajax({
         url: statisticsUrl,
+        timeout: 2000,
         type: 'get',
         success: function(data) {
-        	// console.log(data);
         	var stats = [];
         	$.csv.toObjects(data, {"separator": ";"}).forEach(function (element) {
         		if (element.dataset_location == datasetLocation) {
@@ -85,6 +88,14 @@ function showDatahotelStatistics(datasetLocation) {
         	});
         	console.log(stats);
 
+        	// https://stackoverflow.com/a/7000222
+        	var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+
+        	if (isFirefox) {
+        		$("#brukerveiledning").append(
+        			"<br/>Grunna feil i Firefox, fungerer ikkje graf-biblioteket Highcharts dersom du brukar Firefox som nettlesar. "
+        			+ "<br/>Dette fungerer derimot fint i <a href=\"https://www.google.com/chrome/\">Chrome</a>.<br/><br/>");
+        	} else {
         	var series = generateHighChartsSeries(stats);
         	console.log(series);
 
@@ -93,58 +104,57 @@ function showDatahotelStatistics(datasetLocation) {
         		);
 
         	Highcharts.chart('highchartsContainer', {
+			    title: {
+			        text: 'Trafikk på datasettet'
+			    },
 
-    title: {
-        text: 'Trafikk på datasettet'
-    },
+			    // subtitle: {
+			    //     text: 'Kjelde: hotell.difi.no'
+			    // },
 
-    // subtitle: {
-    //     text: 'Kjelde: hotell.difi.no'
-    // },
+				xAxis: {
+					categories: series[0]
+			    },
 
-	xAxis: {
-		categories: series[0]
-    },
+			    yAxis: {
+			        title: {
+			            text: 'API-kall'
+			        }
+			    },
+			    legend: {
+			        layout: 'vertical',
+			        align: 'right',
+			        verticalAlign: 'middle'
+			    },
 
-    yAxis: {
-        title: {
-            text: 'API-kall'
-        }
-    },
-    legend: {
-        layout: 'vertical',
-        align: 'right',
-        verticalAlign: 'middle'
-    },
+			    plotOptions: {
+			        series: {
+			            label: {
+			                connectorAllowed: false
+			            }
+			            // ,
+			            // pointStart: 2010
+			        }
+			    },
 
-    plotOptions: {
-        series: {
-            label: {
-                connectorAllowed: false
-            }
-            // ,
-            // pointStart: 2010
-        }
-    },
+			    series: series[1],
 
-    series: series[1],
-
-    responsive: {
-        rules: [{
-            condition: {
-                maxWidth: 500
-            },
-            chartOptions: {
-                legend: {
-                    layout: 'horizontal',
-                    align: 'center',
-                    verticalAlign: 'bottom'
-                }
-            }
-        }]
-    }
-
-});
+			    responsive: {
+			        rules: [{
+			            condition: {
+			                maxWidth: 500
+			            },
+			            chartOptions: {
+			                legend: {
+			                    layout: 'horizontal',
+			                    align: 'center',
+			                    verticalAlign: 'bottom'
+			                }
+			            }
+			        }]
+			    }
+			});
+			}
 
         	$("#brukerveiledning").append(
         		"<table id=\"statsTable\" style=\"border-spacing: 7px; "
@@ -187,7 +197,7 @@ function showDatahotelStatistics(datasetLocation) {
         				+ "</td>"          				        				
         			+ "</tr>");
         	});
-        	// $("#statsTable tr:eq(0)").after("<tr><td>test</td></tr>");
+
         	$("#brukerveiledning")
         		.append("<a href=\"https://data.norge.no/data/direktoratet-forvaltning-og-ikt/bes%C3%B8kstal-datahotellet\">"
         			+ "Datakjelde: besøkstal for datahotellet.</a>");
@@ -195,6 +205,8 @@ function showDatahotelStatistics(datasetLocation) {
         },
         error: function () {
         	alert("Feil ved henting av hotell-statistikk.");
+        	console.log("Fekk ikkj henta hotell-statistikk");
+        	$("#statisticsSpinner").remove();
         }
 	});
 }
@@ -221,7 +233,7 @@ function generateHighChartsSeries(data) {
 		}
 	});
 	var series = [{
-		name: 'Total views',
+		name: 'Totalt',
 		data: seriesTotal
 	}, {
 		name: 'JSON(P)',
@@ -233,7 +245,7 @@ function generateHighChartsSeries(data) {
 		name: "CSV",
 		data: seriesCsv
 	}, {
-		name: "Downloads",
+		name: "Nedlastingar",
 		data: seriesDownload
 	}];
 	return [categories, series];
