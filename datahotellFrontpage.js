@@ -14,10 +14,12 @@ function reactToHash() {
 		if (hash.indexOf("=") !== -1) {
 			var hashSplit = hash.substr(1).split("=");
 			if (hashSplit[0] == "statistikk") {
+				$("#datasets").hide();
 				$("#brukerveiledning").text("Statistikk for " + hashSplit[1]);
 				$("#brukerveiledning").append(getSpinner("statisticsSpinner") + "<br/>\n");
 				$("#brukerveiledning").append("NB! Statistikk for periodar før 2017 har feil (manglar data for mange dagar).");
 				showDatahotelStatistics(hashSplit[1]);
+				$("#brukerveiledning").show();
 			}
 
 		} else {
@@ -25,6 +27,7 @@ function reactToHash() {
 		}
 
 	} else {
+		$("#brukerveiledning").hide();
 		showListOfDatasets();
 	}
 }
@@ -35,7 +38,8 @@ function showListOfDatasets() {
 	$.getJSON( fetchUrl, function( data ) {
 		var html;
 		html = '<strong>Datasett (' + data.length + ')</strong><br/><br/>'
-			+ '<table style="text-align: left;"><tr><th>Namn</th><th>Lokasjon</th></tr>';
+			+ '<table style="text-align: left;"><tr>'
+			+ '<th>Namn</th><th>Statistikk</th><th>Lokasjon</th></tr>';
 
 		// https://stackoverflow.com/a/8837511
 		data.sort(function(a, b){
@@ -49,6 +53,7 @@ function showListOfDatasets() {
 
 		for (var i = 0; i < data.length; i++) {
 			html += '<tr><td>' + data[i].name + '</td>'
+				+ '<td><a href="/#statistikk=' + data[i].location + '">Statistikk</a></td>'
 				+ '<td><a href="https://hotell.difi.no/?dataset=' 
 				+ data[i].location + '">' + data[i].location + '</a></td></tr>';
 		} 
@@ -79,6 +84,67 @@ function showDatahotelStatistics(datasetLocation) {
         		}
         	});
         	console.log(stats);
+
+        	var series = generateHighChartsSeries(stats);
+        	console.log(series);
+
+        	$("#brukerveiledning").append(
+        		'<div id="highchartsContainer"></div>'
+        		);
+
+        	Highcharts.chart('highchartsContainer', {
+
+    title: {
+        text: 'Trafikk på datasettet'
+    },
+
+    // subtitle: {
+    //     text: 'Kjelde: hotell.difi.no'
+    // },
+
+	xAxis: {
+		categories: series[0]
+    },
+
+    yAxis: {
+        title: {
+            text: 'API-kall'
+        }
+    },
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+    },
+
+    plotOptions: {
+        series: {
+            label: {
+                connectorAllowed: false
+            }
+            // ,
+            // pointStart: 2010
+        }
+    },
+
+    series: series[1],
+
+    responsive: {
+        rules: [{
+            condition: {
+                maxWidth: 500
+            },
+            chartOptions: {
+                legend: {
+                    layout: 'horizontal',
+                    align: 'center',
+                    verticalAlign: 'bottom'
+                }
+            }
+        }]
+    }
+
+});
 
         	$("#brukerveiledning").append(
         		"<table id=\"statsTable\" style=\"border-spacing: 7px; "
@@ -131,6 +197,46 @@ function showDatahotelStatistics(datasetLocation) {
         	alert("Feil ved henting av hotell-statistikk.");
         }
 	});
+}
+
+// for months only
+function generateHighChartsSeries(data) {
+	var data = data.slice(0).reverse();
+
+	var categories = [];
+	var seriesTotal = [];
+	var seriesJson = [];
+	var seriesXml = [];
+	var seriesCsv = [];
+	var seriesDownload = [];	
+	data.forEach(function(el) {
+		if (isInt(el.month)) { // only if month is integer
+			var period = el.year + "-" + el.month;
+			categories.push(period);
+			seriesTotal.push(parseInt(el.total_pageviews, 10));
+			seriesJson.push(parseInt(el.json, 10) + parseInt(el.jsonp, 10));
+			seriesXml.push(parseInt(el.xml, 10));
+			seriesCsv.push(parseInt(el.csv));
+			seriesDownload.push(parseInt(el.download));
+		}
+	});
+	var series = [{
+		name: 'Total views',
+		data: seriesTotal
+	}, {
+		name: 'JSON(P)',
+		data: seriesJson
+	}, {
+		name: 'XML',
+		data: seriesXml
+	}, {
+		name: "CSV",
+		data: seriesCsv
+	}, {
+		name: "Downloads",
+		data: seriesDownload
+	}];
+	return [categories, series];
 }
 
 $(window).on('hashchange', function() {

@@ -54,7 +54,14 @@
     },
     {
       "matches": ["https://hotell.difi.no/"],
-      "js": ["jquery-3.1.1.min.js", "jquery.csv.min.js", "felles.js", "datahotellFrontpage.js"]      
+      "js": [
+        "jquery-3.1.1.min.js", 
+        "jquery.csv.min.js", 
+        "Highcharts-6.0.5/code/highcharts.js", 
+        "Highcharts-6.0.5/code/modules/series-label.js", 
+        "Highcharts-6.0.5/code/modules/exporting.js", 
+        "felles.js", 
+        "datahotellFrontpage.js"]      
     }
   ],  
   "web_accessible_resources": ["Spinner-1.8s-200px.gif"],
