@@ -112,7 +112,6 @@ function runIt() {
 
 	prepareLatestSection();
 	loadData();
-	removeJSLinkShit();
 	// testheaders();
 }
 

@@ -30,14 +30,6 @@
     {
       "matches": ["*://data.norge.no/organisasjoner"],
       "js": ["jquery-3.1.1.min.js", "felles.js", "datanorge_orgs.js"]
-    },    
-    {
-      "matches": [
-        "*://data.norge.no/search/*", 
-        "*://data.norge.no/kategori/*",
-        "*://data.norge.no/app"
-      ],
-      "js": ["jquery-3.1.1.min.js", "felles.js", "datanorge_removejs.js"]
     },      
     {
       "matches": ["*://data.norge.no/app/*"],

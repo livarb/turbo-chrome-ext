@@ -85,15 +85,6 @@ function getNodeLink() {
   return $("link[rel='shortlink']").attr('href');
 }
 
-function removeJSLinkShit() {
-  $('*[data-url] > .table').each(function() {
-    var dataurl = $(this).parent().attr("data-url");
-    $(this).parent().removeAttr("data-url");
-    $(this).wrap('<a href="' + dataurl + '"></a>');
-    $(this).parent().css("text-decoration", "none");
-  });
-}
-
 // Spinner-animation image from https://loading.io/
 function getSpinner(id) {
   return "<img id=\"" + id + "\" src=\"" + chrome.extension.getURL("Spinner-1.8s-200px.gif") + "\" width=20 height=20/>";

@@ -19,8 +19,6 @@ function runIt() {
 	addTurbo();
 	addOrgsToMenu();	
 
-	removeJSLinkShit();
-
 	prepareAppList();
 
 	// OBS: krev HTTPS
