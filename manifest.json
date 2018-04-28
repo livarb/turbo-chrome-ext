@@ -3,7 +3,7 @@
 
   "name": "Turbo-tillegg for data.norge",
   "description": "Ekstra funksjonalitet for nettstadane data.norge.no, hotell.difi.no og fellesdatakatalog.brreg.no. Uoffisiell nettlesar-utviding.",
-  "version": "0.8",
+  "version": "1.0.0",
 
   "icons": {
     "128": "app-icon_128x128.png"

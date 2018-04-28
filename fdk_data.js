@@ -32,7 +32,7 @@ function swapToRichDescription(data) {
 	var datasetId = decodeURIComponent(datasetIdRaw);		
 
 	if (datanorgeFDKmap.hasOwnProperty(datasetId)) {
-		$("p.fdk-ingress").prepend( getSpinner("descriptionSpinner") );
+		$("p.fdk-ingress:first").prepend( getSpinner("descriptionSpinner") );
 
 		var dataNorgeUrl = "https://data.norge.no/node/" + datanorgeFDKmap[datasetId];
 
@@ -42,15 +42,15 @@ function swapToRichDescription(data) {
 
 		  if (dataset.description.length > 1) {
 		  	if (dataset.description[0].language == "nb") {
-		  		$("p.fdk-ingress").html(dataset.description[0].value);		  		
+		  		$("p.fdk-ingress:first").html(dataset.description[0].value);		  		
 		  	} else if (dataset.description[1].language == "nb") {
-		  		$("p.fdk-ingress").html(dataset.description[1].value);		  				  		
+		  		$("p.fdk-ingress:first").html(dataset.description[1].value);		  				  		
 		  	} else {
 		  		console.log("TURBO-ERROR: could not insert the right description!");
 		  		$("#descriptionSpinner").remove();
 		  	}
 		  } else {
-		  	$("p.fdk-ingress").html(dataset.description[0].value);
+		  	$("p.fdk-ingress:first").html(dataset.description[0].value);
 		  }
 		});
 	}	

@@ -42,7 +42,7 @@ function showListOfDatasets() {
 		var html;
 		html = '<strong>Datasett (' + data.length + ')</strong><br/><br/>'
 			+ '<table style="text-align: left;"><tr>'
-			+ '<th>Namn</th><th>Statistikk</th><th>Lokasjon</th></tr>';
+			+ '<th>Namn</th><th>Statistikk&nbsp;</th><th>Lokasjon</th></tr>';
 
 		// https://stackoverflow.com/a/8837511
 		data.sort(function(a, b){
@@ -77,12 +77,14 @@ function showDatahotelStatistics(datasetLocation) {
 	var statisticsUrl = "https://hotell.difi.no/download/difi/datahotell/sidevisninger-pr-datasett?download";
     $.ajax({
         url: statisticsUrl,
-        timeout: 2000,
+        timeout: 10000,
         type: 'get',
         success: function(data) {
         	var stats = [];
         	$.csv.toObjects(data, {"separator": ";"}).forEach(function (element) {
         		if (element.dataset_location == datasetLocation) {
+        			stats.push(element);
+        		} else if (datasetLocation == "") {
         			stats.push(element);
         		}
         	});
@@ -96,7 +98,14 @@ function showDatahotelStatistics(datasetLocation) {
         			"<br/>Grunna feil i Firefox, fungerer ikkje graf-biblioteket Highcharts dersom du brukar Firefox som nettlesar. "
         			+ "<br/>Dette fungerer derimot fint i <a href=\"https://www.google.com/chrome/\">Chrome</a>.<br/><br/>");
         	} else {
-        	var series = generateHighChartsSeries(stats);
+
+        	if (datasetLocation == "") {
+        		console.log("empty datasetLocation");
+        		var statsCollapsed = collapseStats(stats);
+        		var series = generateHighChartsSeries(stats);        		
+        	} else {
+        		var series = generateHighChartsSeries(stats);
+        	}        	
         	console.log(series);
 
         	$("#brukerveiledning").append(
@@ -205,10 +214,34 @@ function showDatahotelStatistics(datasetLocation) {
         },
         error: function () {
         	alert("Feil ved henting av hotell-statistikk.");
-        	console.log("Fekk ikkj henta hotell-statistikk");
+        	console.log("Fekk ikkje henta hotell-statistikk");
         	$("#statisticsSpinner").remove();
         }
 	});
+}
+
+function collapseStats(data) {
+	return data;
+	/*
+	var newData = [];
+
+	el.year
+	el.month
+	el.total_pageviews
+	el.json
+	el.jsonp
+	el.xml
+	el.csv
+	el.download
+
+	var period = el.year + "-" + el.month;
+
+	newData.push(test);
+
+	data.forEach(function(el) {
+
+	});
+	*/
 }
 
 // for months only

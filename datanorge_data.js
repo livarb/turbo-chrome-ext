@@ -135,9 +135,13 @@ function addAntall(datanorgedatasets) {
 	}	
 }
 
-function createDivForLinks() {
+function createDivForLinksAndLanguageControl() {
 	$(".dataset.description h1").after(
-		'<div id="linkArea" style="margin-top: -5px; margin-bottom: 15px;"></div>');
+		'<div id="linkAreaDiv" style="margin-top: -5px; margin-bottom: 15px;">'
+		+ '<p id="linkArea"></p>'
+		+ '<p id="languageControl"><i>Laster informasjon om språk...</i> '
+		+ getSpinner("languageSpinner")
+		+ '</p></div>');
 }
 
 // TODO: exclude recent datasets. FDK harvests data.norge every night
@@ -174,10 +178,31 @@ function insertEDPLink() {
 		+ getSpinner("edplinkspinner")
 		+ " <i>Sjå <a id=\"edplinka\" href=\"#\">"
 		+ "dette datasettet i European data portal (EDP)</a>.</i>"
-		// + "<img id=\"edplinkspinner\" src=\"" + chrome.extension.getURL("Spinner-1.8s-200px.gif") + "\" width=20 height=20/>"
 		+ "</span>\n");
 
 	fetchAndAddEDPLink( getNodeId() );
+}
+
+function insertLanguageControl(dataset) {
+	if (dataset.hasOwnProperty("title_en")) {
+		$(".dataset.description h1").addClass("norsk_tekst");
+		$(".dataset.description > p").wrapAll('<div class="norsk_tekst" />');
+		// $(".norsk_tekst").hide();
+
+		$(".dataset.description").prepend('<h1 class="engelsk_tekst">' + dataset.title_en + '</div>');
+		$(".dataset.description").append('<div class="engelsk_tekst">' + dataset.description[0].value + '</div');
+
+		$("#languageControl")
+			.html(`<i><button onclick='$(".norsk_tekst").toggle(); $(".engelsk_tekst").toggle();'>`
+				+ `Bytt språk</button> Viser <span class="engelsk_tekst">engelsk</span>`
+				+ `<span class="norsk_tekst">norsk</span> versjon.</i>`);
+		$(".engelsk_tekst").toggle();			
+	} else {
+		$("#languageControl")
+			.html(
+				'<i>Ingen engelsk versjon av denne data-beskrivinga.</i>');
+			// .css("text-decoration", "line-through");
+	}
 }
 
 // Abandoned experiment
@@ -262,20 +287,21 @@ function runIt() {
 		addAppOverview();
 		prepareLastModified();
 
-		createDivForLinks();
+		createDivForLinksAndLanguageControl();
 		insertEDPLink();
 		insertFDKLink();
 
 		topAlignDistributions();
 
 		// Hent data.norge-oversikt
-		$.getJSON( datanorgeDatasetsURL, function( data ) {
-		  var datanorgedatasets = data;
+		loadData().then( datanorgedatasets => {
 		  var dataset = getDataset(getNodeId(), datanorgedatasets);
+		  insertLanguageControl(dataset);
 		  addLastModified(datanorgedatasets);
 		  addAntall(datanorgedatasets);
-		  // TODO: addLandingPage
 		  $("#oppforingspinner").remove();
+		}, () => {
+			console.log("error loading data!!");
 		});
 	}
 }
