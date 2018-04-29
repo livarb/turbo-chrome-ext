@@ -37,6 +37,7 @@ function runIt() {
 	} else { // vanleg visning
 		noteUnpublishedDatasets();
 		enrichDatasetListWithPublisherName();
+		sendPageView();
 	}
 }
 

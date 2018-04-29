@@ -1,12 +1,13 @@
-var debug = true;
-var localCacheTime = 120;
+var debug = false; // enable for extra console output
+var analytics = true; // enable/disable Google Analytics
+var localCacheTime = 120; // time to cache datanorge-catalog in local storage
 
-// var datanorgeDatasetsURL = "https://livarbergheim.no/api/datanorge_api_dump.php";
 var datanorgeDatasetsURL = "https://livarbergheim.no/api/datanorge_api_dump_pluss2.php";
 var datanorgeDatasetsURLcached = "https://livarbergheim.no/api/datanorge_api_dump_pluss2_cached.php";
 var datanorgeAppsURL = "https://livarbergheim.no/api/datanorge_apps_bydataset_json.php";
 var datanorgeFDKmapURL = "https://livarbergheim.no/api/datanorge_fdk_map.php";
 var datanorgeCodes = "https://livarbergheim.no/api/datanorge_codes.php";
+
 
 function timeConverter(UNIX_timestamp){
   var multiplier = 0;
@@ -78,6 +79,16 @@ function formatBytes(a,b){if(0==a)return"0 Bytes";var c=1024,d=b||2,e=["Bytes","
 String.prototype.isEmpty = function() {
     return (this.length === 0 || !this.trim());
 };
+
+function sendPageView() {
+  if (analytics) {
+    chrome.runtime.sendMessage({
+      action: "sendPageView", 
+      page: window.location.href,
+      pageTitle: document.getElementsByTagName("title")[0].innerHTML
+    });
+  }
+}
 
 function extractAppsForOrg(allApps, org) {
   data = allApps;

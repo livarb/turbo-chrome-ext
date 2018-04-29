@@ -109,8 +109,8 @@ function addDatasetNumRows(dataset) {
 		url: 'https://hotell.difi.no/api/json/' + dataset,
 		success: function(data, textStatus, request) {
 			var numRows = request.getResponseHeader('x-datahotel-total-posts');
-			console.log(numRows);
-			console.log(request.getAllResponseHeaders());
+			if (debug) console.log(numRows);
+			if (debug) console.log(request.getAllResponseHeaders());
 			$("#data-uris").append(' — Rader: ' + numberWithCommas(numRows));
 		},
 		error: function() {
@@ -142,7 +142,7 @@ function runIt() {
 	addTurbo();
 
 	var datasetLocation = document.URL.split("=")[1];
-	console.log(datasetLocation);
+	if (debug) console.log(datasetLocation);
 
 	// Grei advarsel til ein sjølv, dersom ein prøver å opprette eit datasett med underscore i sti-navnet..
 	if (datasetLocation.includes("_")) {
@@ -186,6 +186,8 @@ function runIt() {
 	$.getJSON("https://hotell.difi.no/api/json/_all", function(data) {
 	  checkIfDatasetIsPublic(data, datasetLocation);
 	});
+
+	sendPageView();
 }
 
 $(document).ready(() => runIt());

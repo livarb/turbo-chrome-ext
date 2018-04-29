@@ -84,7 +84,9 @@ function runIt() {
 				+ '<li><a href="https://data.norge.no/register/app?brukar">Registrer ein app/tjeneste</a>!</li>');
 		}	
 		$("#appspinner").remove();
-	});	
+	});
+
+	sendPageView();
 }
 
 $(document).ready(() => runIt());

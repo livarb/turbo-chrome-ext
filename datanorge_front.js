@@ -269,6 +269,7 @@ function reactToHash() {
 				});
 		});
 	}
+	sendPageView();
 }
 
 function runIt() {		

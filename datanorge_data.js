@@ -303,6 +303,8 @@ function runIt() {
 		}, () => {
 			console.log("error loading data!!");
 		});
+
+		sendPageView();
 	}
 }
 

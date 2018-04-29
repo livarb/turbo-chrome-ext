@@ -21,6 +21,8 @@ function runIt() {
 
 		window.dispatchEvent(new Event('resize'));
 	});
+
+	sendPageView();
 }
 
 $(document).ready(() => runIt());

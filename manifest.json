@@ -9,6 +9,11 @@
     "128": "app-icon_128x128.png"
   },
 
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },  
+
   "content_scripts": [
     {
       "matches": ["*://fellesdatakatalog.brreg.no/datasets/*"],
@@ -55,7 +60,10 @@
         "felles.js", 
         "datahotellFrontpage.js"]      
     }
-  ],  
+  ],
+
+  "content_security_policy": "script-src 'self' https://www.google-analytics.com; object-src 'self'",
+
   "web_accessible_resources": ["Spinner-1.8s-200px.gif"],
   "permissions": [
     "activeTab",

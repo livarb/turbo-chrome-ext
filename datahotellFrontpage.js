@@ -33,6 +33,7 @@ function reactToHash() {
 		$("#brukerveiledning").hide();
 		showListOfDatasets();
 	}
+	sendPageView();
 }
 
 function showListOfDatasets() {
@@ -223,6 +224,8 @@ function showDatahotelStatistics(datasetLocation) {
 function collapseStats(data) {
 	return data;
 	/*
+	var collapsedData;
+
 	var newData = [];
 
 	el.year
