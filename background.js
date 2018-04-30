@@ -2,8 +2,8 @@
 const GA_TRACKING_ID = 'UA-118398538-1';
 const GA_CLIENT_ID = 'bb9312c4-a991-436f-99ad-162a5c63384f'; // for all users of Firefox add-on
 
+// https://stackoverflow.com/a/7000222
 var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
-console.log(isFirefox);
 
 if (!isFirefox) {
   // thanks to: https://davidsimpson.me/2014/05/27/add-googles-universal-analytics-tracking-chrome-extension/
@@ -20,14 +20,14 @@ if (!isFirefox) {
 }
 
 chrome.runtime.onMessage.addListener(function( request, sender, sendResponse ) {
-    // https://stackoverflow.com/a/7000222
-    
-    if (request.action == "sendPageView"){
+   if (request.action == "sendPageView"){
       if (isFirefox) {
         // https://blog.mozilla.org/addons/2016/05/31/using-google-analytics-in-extensions/
         let xrequest = new XMLHttpRequest();
         let url = encodeURI('/' + request.page);
         let title = encodeURI(request.pageTitle);
+
+        // parameters explained: https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters
         let message =
           "v=1&tid=" + GA_TRACKING_ID + "&cid= " + GA_CLIENT_ID + "&aip=1" +
           "&ds=add-on&t=pageview&dl=" + url + "&dt=" + title;
@@ -35,7 +35,6 @@ chrome.runtime.onMessage.addListener(function( request, sender, sendResponse ) {
         xrequest.open("POST", "https://www.google-analytics.com/collect", true);
         xrequest.send(message);
       } else {
-        // ga('set', 'title', 'Settings');
         ga('send', 'pageview', request.page, {title: request.pageTitle});
       }
     } else if (request.action == "sendEvent") {
