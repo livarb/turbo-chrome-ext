@@ -24,6 +24,11 @@ You can also download the source code and manually add the extension in your own
 #### Front page
 - Shows last modified dataset-entries ("Sist redigerte data-oppføringer")
 
+### Turbo-menu
+Separate [menu/page in data.norge.no](https://data.norge.no/#page=turbo), only available with the extension (v1.0.0), with subpages:
+- English. Show list of dataset-entries with english description (in addition to the norwegian version)
+- Licenses. Show distribution of licenses. E.g. how many datasets with NLOD, how many with CC-BY 4.0 etc.
+
 #### Dataset-entry
 Example: [enhetsregisteret](https://data.norge.no/data/registerenheten-i-br%C3%B8nn%C3%B8ysund/enhetsregisteret)
 - Show list of apps/services that use the dataset
@@ -33,6 +38,7 @@ Example: [enhetsregisteret](https://data.norge.no/data/registerenheten-i-br%C3%B
  - Adds last-modified timestamp for dataset-entry
  - Adds "number of datasets" (internal number used for statistics)
 - Add link to corresponding dataset-entry in FDK, since FDK automatically imports all dataset-entries in data.norge.no.
+- If dataset-entry has english version, show button to swap between languages.
 
 #### Organisation-page
 Example: [Kartverket](https://data.norge.no/organisasjoner/statens-kartverk)
@@ -67,6 +73,8 @@ Example: https://hotell.difi.no/?dataset=bergen/dokart
 - Show size of dataset (if you download the entire dataset as CSV)
 - Show link to display statistics for current dataset (v0.8)
 - Show link to show field-definitions (raw JSON from API)
+- Show number of rows in a dataset (v1.0.0)
+- Show info if a dataset being view is not published (v1.0.0)
 
 #### Dataset-statistics (v0.8)
 Example: https://hotell.difi.no/#statistikk=brreg/enhetsregisteret (only available in extension)
@@ -82,4 +90,6 @@ Example: [Dataset: Kvalitet på nett - resultatliste 2016](https://fellesdatakat
 - Show links to see dataset in other dataportals. Only for entries in FDK which have been imported from data.norge.no
  - data.norge.no
  - Europeandataportal.eu (EDP) (v0.8)
-- Replace description-text with formatted description (paragraphs, line breaks, bold format, links++). Only for entries in FDK which have been imported from data.norge.no (v0.8)
+ 
+ ## Privacy
+ The extension uses Google Analytics to see how the app is being used. It only logs pageviews on pages where the extension is active. Anonymize IP is turned on.
