@@ -519,3 +519,5 @@ function loadDataFromCachedAPI() {
     });
   });
 }
+
+var quickLoad = loadDataQuickly();

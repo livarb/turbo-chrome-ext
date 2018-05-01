@@ -284,6 +284,4 @@ $(window).on('hashchange', function() {
 	reactToHash();
 });
 
-var quickLoad = loadDataQuickly();
-
 $(document).ready(() => runIt());

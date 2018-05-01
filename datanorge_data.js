@@ -88,7 +88,7 @@ function getNodeId() {
 	return $("link[rel='shortlink']").attr('href').split("/")[2];
 }
 
-function prepareLastModified() { // for when data.norge-entry was last modified
+function prepareAboutEntrySection() {
 	$("#block-datanorge-data-description-widget div[class='content'] ul li").each(function (index) {
 		if ($(this).text().includes("Publisert:")) {
 			$(this).attr('id', 'publisertLi');
@@ -99,40 +99,28 @@ function prepareLastModified() { // for when data.norge-entry was last modified
 	var htmlToInsert = '<ul id="aboutEntryList"><h2>Data.norge-oppføring'
 	+ getSpinner("oppforingspinner")
 	+ '</h2>'
-	+ '<li id="datanorge-entry-issued"><strong>Publisert: &nbsp;&nbsp;</strong></li>'	
-	+ '<li id="datanorge-entry-modified"><strong>Oppdatert: </strong></li>'
+	+ '<li id="datanorge-entry-issued"><strong>Publisert: &nbsp;&nbsp;</strong>'
+		+ '<span id="datanorge-entry-issued-data" style="display: inline;"></span></li>'
+	+ '<li id="datanorge-entry-modified"><strong>Oppdatert: </strong>'
+		+ '<span id="datanorge-entry-modified-data" style="display: inline;"></span></li>'
 	+ '<li id="datanorge-entry-numDatasets"><strong title="Brukes til ' 
 		+ 'statistikkformål og ajourføres av Difi. Bakgrunnen er at ei '
 		+ 'data-oppføring på data.norge.no kan representere fleire individuelle '
 		+ ' datasett. Dersom du meiner verdien er feil, send gjerne e-post til '
 		+ 'opnedata@difi.no">'
-		+ 'Antall individuelle datasett: </strong></li>'	
+		+ 'Antall individuelle datasett: </strong>'
+		+ '<span id="datanorge-entry-numDatasets-data" style="display: inline;"></span></li>'
 	+ '</ul>';
 	$("#block-datanorge-data-description-widget div[class='content']").append(htmlToInsert);
 }
 
-function addLastModified(datanorgedatasets) { // for when data.norge-entry was last modified
-	var nodeId = getNodeId();
-	var dataset = getDataset(nodeId, datanorgedatasets);
-
-	if (dataset) {
-		$("#datanorge-entry-issued").append(dataset.issued);
-		$("#datanorge-entry-modified").append(dataset.modified.replace("T", " "));
-	} else {
-		$("#publisertLi").show();
-		$("#aboutEntryList").hide();
-	}
+function addLastModified(dataset) { // for when data.norge-entry was last modified
+	$("#datanorge-entry-issued-data").text(dataset.issued);
+	$("#datanorge-entry-modified-data").text(dataset.modified.replace("T", " "));
 }
 
-function addAntall(datanorgedatasets) {
-	var nodeId = getNodeId();
-	var dataset = getDataset(nodeId, datanorgedatasets);
-
-	if (dataset) {
-		$("#datanorge-entry-numDatasets").append(dataset.antall);	
-	} else {
-
-	}	
+function addAntall(dataset) {
+	$("#datanorge-entry-numDatasets-data").text(dataset.antall);	
 }
 
 function createDivForLinksAndLanguageControl() {
@@ -142,6 +130,11 @@ function createDivForLinksAndLanguageControl() {
 		+ '<p id="languageControl"><i>Laster informasjon om språk...</i> '
 		+ getSpinner("languageSpinner")
 		+ '</p></div>');
+	$(".dataset.description h1").addClass("norsk_tekst");
+	$(".dataset.description > p").wrapAll('<div class="norsk_tekst" />');
+
+	$(".dataset.description").prepend('<h1 class="engelsk_tekst" style="display: none;"></div>');
+	$(".dataset.description").append('<div class="engelsk_tekst" style="display: none;"></div');	
 }
 
 // TODO: exclude recent datasets. FDK harvests data.norge every night
@@ -185,86 +178,17 @@ function insertEDPLink() {
 
 function insertLanguageControl(dataset) {
 	if (dataset.hasOwnProperty("title_en")) {
-		$(".dataset.description h1").addClass("norsk_tekst");
-		$(".dataset.description > p").wrapAll('<div class="norsk_tekst" />');
-		// $(".norsk_tekst").hide();
-
-		$(".dataset.description").prepend('<h1 class="engelsk_tekst">' + dataset.title_en + '</div>');
-		$(".dataset.description").append('<div class="engelsk_tekst">' + dataset.description[0].value + '</div');
+		$("h1.engelsk_tekst").html(dataset.title_en);
+		$("div.engelsk_tekst").html(dataset.description[0].value);
 
 		$("#languageControl")
 			.html(`<i><button onclick='$(".norsk_tekst").toggle(); $(".engelsk_tekst").toggle();'>`
-				+ `Bytt språk</button> Viser <span class="engelsk_tekst">engelsk</span>`
+				+ `Bytt språk</button> Viser <span class="engelsk_tekst" style="display: none;">engelsk</span>`
 				+ `<span class="norsk_tekst">norsk</span> versjon.</i>`);
-		$(".engelsk_tekst").toggle();			
 	} else {
 		$("#languageControl")
 			.html(
 				'<i>Ingen engelsk versjon av denne data-beskrivinga.</i>');
-			// .css("text-decoration", "line-through");
-	}
-}
-
-// Abandoned experiment
-// Helps fill data-registration-form
-function startDistributionHotelHelper() {
-	if (document.URL.endsWith("/edit")) {
-		console.log("We are editing!");
-
-		// Get number of distributions
-		var distributionRows = $("#ief-entity-table-edit-field-distribution-und-entities tbody tr");
-		var numDistributions = distributionRows.length;
-
-		/*
-		$(":input").focus(function() {
-			console.log("Input i fokus!");
-			console.log(this);
-		});
-		*/
-
-		var observer = new MutationObserver(function () {
-			console.log("Observed!");
-		var accessURLid = "#edit-field-distribution-und-entities-XX-form-field-access-url-und-0-url";			
-		for (let i = 0; i < numDistributions + 1; i++) {
-			var currentID = accessURLid.replace("XX", i);
-			var selector = $(currentID);
-			if (selector.length == 0) {
-				console.log("No selector found - " + i + "  " + currentID);
-			} else {
-				console.log("Found field - " + i + "  " + currentID);
-				$(currentID).change(function () {
-					console.log("Input changed!");
-					if ($(this).val().includes("hotell.difi.no")) {
-						// "Nedlastingslenke"
-						var selectorDownloadUrl = "#edit-field-distribution-und-entities-XX-form-field-download-url-und-0-url".replace("XX", i);
-						$(selectorDownloadUrl).prop("readonly", true);
-
-						// "Lenkede skjema"
-						var selectorLinkedSchema = "#edit-field-distribution-und-entities-XX-form-field-web-service-und-0-url".replace("XX", i);
-						$(selectorLinkedSchema).prop("readonly", true);
-
-						// "Tittel"
-						var selectorTitle = "#edit-field-distribution-und-entities-XX-form-field-distribution-title-nb-0-value".replace("XX", i);
-						$(selectorTitle).prop("readonly", true);
-
-						// "Beskrivelse"
-						var selectorDescription = "#edit-field-distribution-und-entities-XX-form-field-description-und-0-value".replace("XX", i);
-						$(selectorDescription).prop("readonly", true); // TODO: test at denne faktisk fungerer
-					}
-				});
-			}
-		}
-		});
-
-		var observerConfig = {
-			attributes: true,
-			childList: true,
-			characterData: true
-		}
-
-		var targetNode = $("#ief-entity-table-edit-field-distribution-und-entities").first();
-		targetNode = document.body;
-		observer.observe(targetNode, observerConfig);
 	}
 }
 
@@ -274,18 +198,34 @@ function topAlignDistributions() {
 	});	
 }
 
+function updateAboutEntrySection(datanorgedatasets, removeSpinner = true, newData = true) {
+	if (newData) {
+		var dataset = getDataset(getNodeId(), datanorgedatasets);
+		if (debug) console.log(dataset);
+		if (dataset) {
+			insertLanguageControl(dataset);
+			addLastModified(dataset);
+			addAntall(dataset);
+		} else {
+			$("#publisertLi").show();
+			$("#aboutEntryList").hide();
+		}
+	}
+
+	if (removeSpinner) $("#oppforingspinner").remove();	
+}
+
 var datanorgedatasets;
 function runIt() {
 	addTurbo();
 	addOrgsToMenu();	
 
 	if(document.URL.endsWith("/edit")) { // editing
-		// EXPERIMENTAL
-		// startDistributionHotelHelper();
+
 	} else { // vanleg visning
 		addDatahotelUpdated();
 		addAppOverview();
-		prepareLastModified();
+		prepareAboutEntrySection();
 
 		createDivForLinksAndLanguageControl();
 		insertEDPLink();
@@ -294,14 +234,23 @@ function runIt() {
 		topAlignDistributions();
 
 		// Hent data.norge-oversikt
-		loadData().then( datanorgedatasets => {
-		  var dataset = getDataset(getNodeId(), datanorgedatasets);
-		  insertLanguageControl(dataset);
-		  addLastModified(datanorgedatasets);
-		  addAntall(datanorgedatasets);
-		  $("#oppforingspinner").remove();
+		quickLoad.then(data => {
+			updateAboutEntrySection(data, false);
 		}, () => {
-			console.log("error loading data!!");
+			console.log("Couldn't load data quickly. Oh noes!");
+		});
+
+		quickLoad.then( () => {
+			isCacheFresh().then(
+				() => { // fresh
+					updateAboutEntrySection(null, true, false); // remove spinner
+				}, () => { // not fresh
+					loadDataFromAPI().then(
+						data => {
+							updateAboutEntrySection(data, true);
+						}, () => { console.log("error getting new data!?!?"); }
+					);
+				});
 		});
 
 		sendPageView();
