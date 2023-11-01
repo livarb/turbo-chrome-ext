@@ -2,7 +2,7 @@
   "manifest_version": 2,
 
   "name": "Turbo-tillegg for data.norge",
-  "description": "Ekstra funksjonalitet for nettstadane data.norge.no, hotell.difi.no og fellesdatakatalog.brreg.no. Uoffisiell nettlesar-utviding.",
+  "description": "Ekstra funksjonalitet for nettstadane data.norge.no, hotell.difi.no og fellesdatakatalog.digdir.no. Uoffisiell nettlesar-utviding.",
   "version": "1.0.1",
 
   "icons": {
@@ -16,7 +16,7 @@
 
   "content_scripts": [
     {
-      "matches": ["*://fellesdatakatalog.brreg.no/datasets/*"],
+      "matches": ["*://fellesdatakatalog.digdir.no/datasets/*"],
       "js": ["jquery-3.1.1.min.js", "felles.js", "fdk_data.js"]
     },    
     {

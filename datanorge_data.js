@@ -149,7 +149,7 @@ function insertFDKLink(data) {
 	$.getJSON( datanorgeFDKmapURL, function( data ) {
 		var datanorgeFDKmap = data;
 		var fdkId = data[getNodeId()];
-		var url = "https://fellesdatakatalog.brreg.no/datasets/" + 
+		var url = "https://fellesdatakatalog.digdir.no/datasets/" + 
 			encodeURIComponent(fdkId);
 
 		if (fdkId === undefined) {

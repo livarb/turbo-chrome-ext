@@ -1,5 +1,5 @@
 var debug = false; // enable for extra console output
-var analytics = true; // enable/disable Google Analytics
+var analytics = false; // enable/disable Google Analytics
 var localCacheTime = 120; // time to cache datanorge-catalog in local storage
 
 var datanorgeDatasetsURL = "https://livarbergheim.no/api/datanorge_api_dump_pluss2.php";
@@ -518,6 +518,20 @@ function loadDataFromCachedAPI() {
        }
     });
   });
+}
+
+// https://stackoverflow.com/a/18197341
+function download(filename, text) {
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  element.setAttribute('download', filename);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
 }
 
 var quickLoad = loadDataQuickly();

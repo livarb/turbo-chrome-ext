@@ -1,9 +1,9 @@
 # Turbo-extension for data.norge.no++
 
-Browser-extension for adding extra functionality to [data.norge.no](https://data.norge.no/), [hotell.difi.no](https://hotell.difi.no) and [fellesdatakatalog.brreg.no](https://fellesdatakatalog.brreg.no) (FDK). This is an unofficial extension. See [blog-post for introduction to what the extension does](https://medium.com/@livar.bergheim/become-a-superuser-of-data-norge-no-and-hotell-difi-no-8c3503364d90).
+Browser-extension for adding extra functionality to [data.norge.no](https://data.norge.no/), [hotell.difi.no](https://hotell.difi.no) and [fellesdatakatalog.digdir.no](https://fellesdatakatalog.digdir.no) (FDK). This is an unofficial extension. See [blog-post for introduction to what the extension does](https://medium.com/@livar.bergheim/become-a-superuser-of-data-norge-no-and-hotell-difi-no-8c3503364d90).
 
 ### Note that websites are in norwegian
-Note that [data.norge.no](https://data.norge.no/) and [hotell.difi.no](https://hotell.difi.no) are only available in norwegian, while [fellesdatakatalog.brreg.no](https://fellesdatakatalog.brreg.no) is also available in english, although much of the content is only in norwegian. This Github-repository and the blog-post is in english to be more easily accessible for people who are interested in open data or writing browser-extensions.
+Note that [data.norge.no](https://data.norge.no/) and [hotell.difi.no](https://hotell.difi.no) are only available in norwegian, while [fellesdatakatalog.digdir.no](https://fellesdatakatalog.digdir.no) is also available in english, although much of the content is only in norwegian. This Github-repository and the blog-post is in english to be more easily accessible for people who are interested in open data or writing browser-extensions.
 
 ## Getting started
 The extension is currently available for:
@@ -83,10 +83,10 @@ Example: https://hotell.difi.no/#statistikk=brreg/enhetsregisteret (only availab
 - Draws line-chart with lines for JSON(P), XML, CSV, downloads and total.
 - Shows table with all data.
 
-### Fellesdatakatalog.brreg.no (FDK)
+### Fellesdatakatalog.digdir.no (FDK)
 
 #### Data-entry
-Example: [Dataset: Kvalitet på nett - resultatliste 2016](https://fellesdatakatalog.brreg.no/datasets/a82e6eb7-6b59-4264-9def-1dc2ad913b36)
+Example: [Dataset: Kvalitet på nett - resultatliste 2016](https://fellesdatakatalog.digdir.no/datasets/a82e6eb7-6b59-4264-9def-1dc2ad913b36)
 - Show links to see dataset in other dataportals. Only for entries in FDK which have been imported from data.norge.no
  - data.norge.no
  - Europeandataportal.eu (EDP) (v0.8)
