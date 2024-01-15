@@ -3,7 +3,7 @@
 
   "name": "Turbo-tillegg for data.norge",
   "description": "Ekstra funksjonalitet for nettstadane hotell.difi.no. Uoffisiell nettlesar-utviding.",
-  "version": "2.0.0",
+  "version": "2.0.1",
 
   "icons": {
     "128": "app-icon_128x128.png"

@@ -78,7 +78,7 @@ function showDatahotelStatistics(datasetLocation) {
 	var statisticsUrl = "https://hotell.difi.no/download/difi/datahotell/sidevisninger-pr-datasett?download";
     $.ajax({
         url: statisticsUrl,
-        timeout: 10000,
+        timeout: 42000,
         type: 'get',
         success: function(data) {
         	var stats = [];
